@@ -1,0 +1,23 @@
+body {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.center {
+    text-align: center;
+}
+
+button {
+    padding: 15px 30px;
+    font-size: 2rem;
+    border-radius: 50%; /* Make the button circular */
+    cursor: pointer;
+    transform: scale(4); /* Make the button 50% bigger */
+}
+h1 {
+    font-size: 24px;
+    color: #333; /* Adjust the color based on your design */
+}
