@@ -5,7 +5,7 @@
         "type": "Feature",
         "geometry": {
           "type": "Point",
-          "coordinates": [4.34878, 50.85045] 
+          "coordinates": [4.34878, 50.85045]
         },
         "properties": {
           "name": "Brussels"
@@ -15,23 +15,52 @@
         "type": "Feature",
         "geometry": {
           "type": "Point",
-          "coordinates": [3.7174, 51.0543] 
+          "coordinates": [3.19191, 51.19204]
         },
         "properties": {
-          "name": "Gent"
+          "name": "Location 1 (200 km NW)"
         }
       },
       {
         "type": "Feature",
         "geometry": {
           "type": "Point",
-          "coordinates": [4.7009, 50.8796] 
+          "coordinates": [5.77365, 51.26634]
         },
         "properties": {
-          "name": "Leuven"
+          "name": "Location 2 (400 km NE)"
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [3.51248, 50.40536]
+        },
+        "properties": {
+          "name": "Location 3 (600 km SW)"
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [5.66408, 50.92979]
+        },
+        "properties": {
+          "name": "Location 4 (1000 km SE)"
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [7.09547, 51.31263]
+        },
+        "properties": {
+          "name": "Location 5 (1200 km N)"
         }
       }
-    
     ]
   }
   

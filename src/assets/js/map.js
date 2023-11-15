@@ -18,7 +18,7 @@ function createMap() {
         ],
         view: new ol.View({
             center: ol.proj.fromLonLat([4.34878,50.85045]),
-            zoom: 14
+            zoom: 8
         
         })
     });
@@ -27,12 +27,18 @@ function createMap() {
         source: new ol.source.Vector({
             url: 'assets/js/colonies.geojson',
             format: new ol.format.GeoJSON()
+        }),
+        style: new ol.style.Style({
+            image: new ol.style.Icon({
+                src: 'assets/images/location_map_icon.png',
+                tileSize: 256,
+                scale: 0.008
+            })
         })
-    })
+    });
 
-    map.addLayer(colonies)
-
-    map.getView().fit(bounds, {padding: [10, 10, 10, 10]});
+    
+    map.addLayer(colonies);
 
     return map;
 }
