@@ -8,57 +8,47 @@
           "coordinates": [4.34878, 50.85045]
         },
         "properties": {
-          "name": "Brussels"
+          "name": "Adria"
         }
       },
       {
         "type": "Feature",
         "geometry": {
           "type": "Point",
-          "coordinates": [3.19191, 51.19204]
+          "coordinates": [2.3522, 48.8566]
         },
         "properties": {
-          "name": "Location 1 (200 km NW)"
+          "name": "Badria"
         }
       },
       {
         "type": "Feature",
         "geometry": {
           "type": "Point",
-          "coordinates": [5.77365, 51.26634]
+          "coordinates": [-0.1276, 51.5074]
         },
         "properties": {
-          "name": "Location 2 (400 km NE)"
+          "name": "Cadria"
         }
       },
       {
         "type": "Feature",
         "geometry": {
           "type": "Point",
-          "coordinates": [3.51248, 50.40536]
+          "coordinates": [10.7522, 59.9139]
         },
         "properties": {
-          "name": "Location 3 (600 km SW)"
+          "name": "Dadria"
         }
       },
       {
         "type": "Feature",
         "geometry": {
           "type": "Point",
-          "coordinates": [5.66408, 50.92979]
+          "coordinates": [12.4964, 41.9028]
         },
         "properties": {
-          "name": "Location 4 (1000 km SE)"
-        }
-      },
-      {
-        "type": "Feature",
-        "geometry": {
-          "type": "Point",
-          "coordinates": [7.09547, 51.31263]
-        },
-        "properties": {
-          "name": "Location 5 (1200 km N)"
+          "name": "Edria"
         }
       }
     ]

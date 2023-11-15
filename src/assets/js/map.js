@@ -18,7 +18,7 @@ function createMap() {
         ],
         view: new ol.View({
             center: ol.proj.fromLonLat([4.34878,50.85045]),
-            zoom: 8
+            zoom: 4
         
         })
     });
