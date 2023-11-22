@@ -1,0 +1,134 @@
+/*body {*/
+/*    font-family: Arial, sans-serif;*/
+/*}*/
+
+/*.calendar {*/
+/*    width: 350px;*/
+/*    margin: 20px 100px ;*/
+/*    border: 1px solid #ccc;*/
+/*    border-radius: 5px;*/
+/*    float: right;*/
+
+/*}*/
+
+/*.calendar-header {*/
+/*    display: flex;*/
+/*    justify-content: space-between;*/
+/*    align-items: center;*/
+/*    background-color: #f2f2f2;*/
+/*    padding: 10px;*/
+/*}*/
+
+/*#currentMonthYear {*/
+/*    margin: 0;*/
+/*}*/
+
+/*button {*/
+/*    background-color: #4caf50;*/
+/*    color: white;*/
+/*    border: none;*/
+/*    padding: 5px 10px;*/
+/*    border-radius: 3px;*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*button:hover {*/
+/*    background-color: #45a049;*/
+/*}*/
+
+/*.calendar-body {*/
+/*    display: grid;*/
+/*    grid-template-columns: repeat(7, 1fr);*/
+/*    gap: 5px;*/
+/*    padding: 10px;*/
+/*}*/
+
+/*.day {*/
+/*    text-align: center;*/
+/*    padding: 5px;*/
+/*    border: 1px solid #ddd;*/
+/*    background-color: #f9f9f9;*/
+/*}*/
+
+/*.day:hover {*/
+/*    background-color: #ddd;*/
+/*}*/
+
+
+/*Its a bigger size*/
+
+body {
+    font-family: Arial, sans-serif;
+    font-size: 20px;
+}
+
+.calendarTime {
+    float: right;
+    margin-right: 100px;
+
+}
+
+.calendar {
+    width: 450px; /* Increased width */
+    /*margin: 20px 100px;*/
+    border: 2px solid #ccc; /* Increased border size */
+    border-radius: 10px; /* Increased border radius */
+    /*float: right;*/
+    margin-bottom: 150px;
+    margin-top: 100px;
+
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f2f2f2;
+    padding: 15px; /* Increased padding */
+}
+
+#currentMonthYear {
+    margin: 0;
+    font-size: 20px; /* Increased font size */
+}
+
+button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 8px 15px; /* Increased padding */
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px; /* Increased font size */
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.calendar-body {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px; /* Increased gap */
+    padding: 15px; /* Increased padding */
+}
+
+.day {
+    text-align: center;
+    padding: 10px; /* Increased padding */
+    border: 2px solid #ddd; /* Increased border size */
+    background-color: #f9f9f9;
+    font-size: 16px; /* Increased font size */
+}
+
+.day:hover {
+    background-color: #ddd;
+}
+
+label {
+    margin-right: 50px;
+}
+select {
+    padding: 10px;
+}
+
