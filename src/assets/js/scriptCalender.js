@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const calendarBody = document.querySelector('#calendarBody');
     const selectedDateInput = document.querySelector('#selectedDate');
     const submitForm = document.querySelector('#submitForm');
+    // const routeDescription = document.querySelector('#routeDescription');
 
     let currentDate = new Date(),
         currentMonth = currentDate.getMonth(),
@@ -94,5 +95,28 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Please select both date and time.');
         }
     });
+
+    function showDescription() {
+        const routes = document.querySelector('#routes').value;
+    // routeDescription.textContent = routes;
+        let description = "";
+
+        switch(routes) {
+            case "route1":
+                description = "Description for Adrial A.";
+                break;
+            case "route2":
+                description = "Description for Adrial B.";
+                break;
+            case "route3":
+                description = "Description for Adrial C.";
+                break;
+            default:
+                description = "Select a route to see the description.";
+        }
+        document.querySelector('#routeDescription').innerText  = description;
+    }
+    document.querySelector('#routes').addEventListener('change', showDescription);
+
 });
 
