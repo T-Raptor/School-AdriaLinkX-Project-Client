@@ -2,9 +2,14 @@
 
 document.addEventListener("DOMContentLoaded", init);
 
+function moveAndUpdate() {
+    applyRandomMovement();
+    updateShuttles();
+}
+
 function init() {
    createMap();
-   
+   setInterval(moveAndUpdate, 50);
 }
 
 function createMap() {
@@ -25,7 +30,9 @@ function createMap() {
     });
 
     const coloniesLayer = createColoniesLayer();
+    const shuttlesLayer = createShuttlesLayer();
     map.addLayer(coloniesLayer);
+    map.addLayer(shuttlesLayer);
 
     return map;
 }
@@ -45,3 +52,59 @@ function createColoniesLayer() {
         }),
     });
 }
+
+const shuttles = [
+    "AE6-C72-EFA",
+    "ADD-BB2-47D"
+];
+
+const locShuttles = {
+    "AE6-C72-EFA": [106.8478695, -6.1568562],
+    "ADD-BB2-47D": [56.8478695, -6.1568562]
+};
+
+
+const ftShuttles = {};
+function createShuttleSource() {
+    return new ol.source.Vector({
+        features: shuttles.map(shuttle => ftShuttles[shuttle])
+    });
+}
+function createShuttlesLayer() {
+    for (const shuttle of shuttles) {
+        ftShuttles[shuttle] = new ol.Feature(
+            new ol.geom.Point(
+                ol.proj.fromLonLat(locShuttles[shuttle])
+            )
+        );
+    }
+
+    return new ol.layer.Vector({
+        source: createShuttleSource(),
+        style: new ol.style.Style({
+            image: new ol.style.Icon({
+                src: 'assets/images/generic_marker.png',
+                tileSize: 256,
+                scale: 0.008
+            })
+        }),
+    });
+}
+
+
+function applyRandomMovement() {
+    shuttles.forEach(shuttle => {
+        locShuttles[shuttle][0] += Math.random()*2-1;
+        locShuttles[shuttle][1] += Math.random()*2-1;
+    })
+}
+
+function updateShuttles() {
+    for (const shuttle of shuttles) {
+        ftShuttles[shuttle].getGeometry().setCoordinates(
+            ol.proj.fromLonLat(locShuttles[shuttle])
+        );
+    }
+}
+
+
