@@ -31,8 +31,10 @@ function createMap() {
 
     const coloniesLayer = createColoniesLayer();
     const shuttlesLayer = createShuttlesLayer();
+    const tracksLayer = createTracksLayer();
     map.addLayer(coloniesLayer);
     map.addLayer(shuttlesLayer);
+    map.addLayer(tracksLayer);
 
     return map;
 }
@@ -108,3 +110,15 @@ function updateShuttles() {
 }
 
 
+function createTracksLayer() {
+    return new ol.layer.Vector({
+        source: new ol.source.Vector({
+            url: 'assets/js/tracks.geojson',
+            format: new ol.format.GeoJSON()
+        }),
+        style: new ol.style.Style({
+          fill: new ol.style.Fill({ color: '#FF0000', weight: 4}),
+          stroke: new ol.style.Stroke({ color: '#FF0000', weight: 2})
+        })
+    });
+}
