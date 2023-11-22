@@ -1,61 +1,3 @@
-/*body {*/
-/*    font-family: Arial, sans-serif;*/
-/*}*/
-
-/*.calendar {*/
-/*    width: 350px;*/
-/*    margin: 20px 100px ;*/
-/*    border: 1px solid #ccc;*/
-/*    border-radius: 5px;*/
-/*    float: right;*/
-
-/*}*/
-
-/*.calendar-header {*/
-/*    display: flex;*/
-/*    justify-content: space-between;*/
-/*    align-items: center;*/
-/*    background-color: #f2f2f2;*/
-/*    padding: 10px;*/
-/*}*/
-
-/*#currentMonthYear {*/
-/*    margin: 0;*/
-/*}*/
-
-/*button {*/
-/*    background-color: #4caf50;*/
-/*    color: white;*/
-/*    border: none;*/
-/*    padding: 5px 10px;*/
-/*    border-radius: 3px;*/
-/*    cursor: pointer;*/
-/*}*/
-
-/*button:hover {*/
-/*    background-color: #45a049;*/
-/*}*/
-
-/*.calendar-body {*/
-/*    display: grid;*/
-/*    grid-template-columns: repeat(7, 1fr);*/
-/*    gap: 5px;*/
-/*    padding: 10px;*/
-/*}*/
-
-/*.day {*/
-/*    text-align: center;*/
-/*    padding: 5px;*/
-/*    border: 1px solid #ddd;*/
-/*    background-color: #f9f9f9;*/
-/*}*/
-
-/*.day:hover {*/
-/*    background-color: #ddd;*/
-/*}*/
-
-
-/*Its a bigger size*/
 
 body {
     font-family: Arial, sans-serif;
@@ -135,20 +77,30 @@ button:hover {
 label {
     margin-right: 50px;
     font-size: 20px;
+    display: block;
+    margin-top: 25px;
 
-}
-select {
-    padding: 10px;
 }
 
 #selectedDate{
     font-size: 20px;
 }
-#timeing {
-    margin-top: 25px;
-}
+
 #reserve {
     margin-top: 25px;
+
+}
+select{
+    font-size: 20px;
+}
+
+#submitForm{
+    margin-top: 25px;
+    margin-left: 50px;
+    font-size: 20px;
+}
+#timeing{
+    font-size: 20px;
 
 }
 

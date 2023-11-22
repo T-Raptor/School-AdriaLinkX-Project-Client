@@ -4,17 +4,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const currentMonthYear = document.querySelector('#currentMonthYear');
     const calendarBody = document.querySelector('#calendarBody');
     const selectedDateInput = document.querySelector('#selectedDate');
-    const submitForm = document.querySelector('#submitForm')
+    const submitForm = document.querySelector('#submitForm');
 
-
-
-    let currentDate = new Date(), currentMonth = currentDate.getMonth(), currentYear = currentDate.getFullYear();
+    let currentDate = new Date(),
+        currentMonth = currentDate.getMonth(),
+        currentYear = currentDate.getFullYear();
 
     function renderCalendar() {
         calendarBody.innerHTML = '';
-        const firstDay = new Date(currentYear, currentMonth, 1), lastDay = new Date(currentYear, currentMonth + 1, 0);
+        const firstDay = new Date(currentYear, currentMonth, 1),
+            lastDay = new Date(currentYear, currentMonth + 1, 0);
 
-        currentMonthYear.textContent = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(firstDay);
+        currentMonthYear.textContent = new Intl.DateTimeFormat('en-US', {
+            month: 'long',
+            year: 'numeric'
+        }).format(firstDay);
 
         ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(day => calendarBody.innerHTML += `<div class="day">${day}</div>`);
 
@@ -29,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Add click event to capture selected date
                 dayElement.addEventListener('click', function (event) {
                     event.preventDefault();
-                    const selectedDate = new Date(currentYear, currentMonth, i + 1);
+                    const selectedDate = new Date(currentYear, currentMonth, i);
                     const formattedDate = selectedDate.toISOString().split('T')[0];
                     selectedDateInput.value = formattedDate;
                 });
@@ -60,27 +64,35 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         renderCalendar();
     });
-    submitForm.addEventListener('click', function (event) {
 
-        const selectedDate = document.getElementById('selectedDate').value;
-        const selectedTime = document.getElementById('timeing').value;
+    submitForm.addEventListener('click', function (event) {
+        event.preventDefault();
+
+        const selectedDate = document.querySelector('#selectedDate').value;
+        const selectedTime = document.querySelector('#timeing').value;
+        const routes = document.querySelector('#routes').value;
 
         // Validate that both date and time are selected
-        if (selectedDate && selectedTime) {
-            // Construct the reservation object
-            const reservation = {
-                date: selectedDate,
-                time: selectedTime
-            };
+        if (selectedDate && selectedTime && routes) {
+            const selectedDateTime = new Date(selectedDate + 'T' + selectedTime);
+            const currentDateTime = new Date();
 
-            // Store the reservation object in local storage
-            localStorage.setItem('reservation', JSON.stringify(reservation));
+            // Compare with the current date and time
+            if (selectedDateTime > currentDateTime) {
+                const reservation = {
+                    date: selectedDate,
+                    time: selectedTime,
+                    routes: routes
+                };
 
-            // You can also redirect to another page or perform other actions as needed
-            alert('Reservation successful!');
+                localStorage.setItem('reservation', JSON.stringify(reservation));
+                alert('Thank you for using AdriaLinkX. Your reservation has been placed.');
+            } else {
+                alert('Please select a future date and time.');
+            }
         } else {
             alert('Please select both date and time.');
         }
-    })
+    });
 });
 

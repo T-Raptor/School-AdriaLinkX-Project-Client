@@ -24,18 +24,23 @@
     <h2 id="currentMonthYear"></h2>
     <button id="nextMonth">&#9655;</button>
   </div>
-
   <div class="calendar-body" id="calendarBody"></div>
-
 </div>
-  <label for="selectedDate">Select Date:</label>
-  <input type="text" id="selectedDate" readonly>
-  <div>
+  <div class="labels">
+    <label for="selectedDate">Select Date:</label>
+    <input type="text" id="selectedDate" readonly>
     <label for="timeing">Select Time</label>
     <input type="time" id="timeing">
+    <label for="routes"> Select Routes</label>
+    <select id="routes" name="routes">
+      <option value="route1">Adrial A</option>
+      <option value="route2">Adrial B</option>
+      <option value="route3">Adrial C</option>
+<!--      <option value="route4">Adrial A</option>-->
+    </select>
   </div>
+
   <button type="button" id="submitForm">Checkout</button>
-</div>
 </div>
 </form>
 
