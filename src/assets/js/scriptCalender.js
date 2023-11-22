@@ -1,9 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const prevMonthBtn = document.getElementById('prevMonth');
-    const nextMonthBtn = document.getElementById('nextMonth');
-    const currentMonthYear = document.getElementById('currentMonthYear');
-    const calendarBody = document.getElementById('calendarBody');
-    const selectedDateInput = document.getElementById('selectedDate');
+    const prevMonthBtn = document.querySelector('#prevMonth');
+    const nextMonthBtn = document.querySelector('#nextMonth');
+    const currentMonthYear = document.querySelector('#currentMonthYear');
+    const calendarBody = document.querySelector('#calendarBody');
+    const selectedDateInput = document.querySelector('#selectedDate');
+    const submitForm = document.querySelector('#submitForm')
+
+
 
     let currentDate = new Date(), currentMonth = currentDate.getMonth(), currentYear = currentDate.getFullYear();
 
@@ -57,5 +60,27 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         renderCalendar();
     });
+    submitForm.addEventListener('click', function (event) {
+
+        const selectedDate = document.getElementById('selectedDate').value;
+        const selectedTime = document.getElementById('timeing').value;
+
+        // Validate that both date and time are selected
+        if (selectedDate && selectedTime) {
+            // Construct the reservation object
+            const reservation = {
+                date: selectedDate,
+                time: selectedTime
+            };
+
+            // Store the reservation object in local storage
+            localStorage.setItem('reservation', JSON.stringify(reservation));
+
+            // You can also redirect to another page or perform other actions as needed
+            alert('Reservation successful!');
+        } else {
+            alert('Please select both date and time.');
+        }
+    })
 });
 
