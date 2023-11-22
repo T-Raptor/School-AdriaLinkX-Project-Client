@@ -1,10 +1,12 @@
 "use strict";
 
-document.addEventListener("DOMContentLoaded",init);
+document.addEventListener("DOMContentLoaded", init);
 
 function init() {
-    createMap();
+   createMap();
+   
 }
+
 function createMap() {
     const map = new ol.Map({
         target: 'centra-map',
@@ -17,13 +19,19 @@ function createMap() {
             })
         ],
         view: new ol.View({
-            center: ol.proj.fromLonLat([4.34878,50.85045]),
+            center: ol.proj.fromLonLat([4.34878, 50.85045]),
             zoom: 4
-        
         })
     });
 
-    const colonies = new ol.layer.Vector({
+    const coloniesLayer = createColoniesLayer();
+    map.addLayer(coloniesLayer);
+
+    return map;
+}
+
+function createColoniesLayer() {
+    return new ol.layer.Vector({
         source: new ol.source.Vector({
             url: 'assets/js/colonies.geojson',
             format: new ol.format.GeoJSON()
@@ -34,12 +42,6 @@ function createMap() {
                 tileSize: 256,
                 scale: 0.008
             })
-        })
+        }),
     });
-
-    
-    map.addLayer(colonies);
-
-    return map;
 }
-

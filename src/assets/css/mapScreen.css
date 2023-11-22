@@ -10,3 +10,10 @@ body{
 .material-symbols-outlined{
     color: red;
 }
+h1{
+    
+    padding-left: 30rem;
+    padding-right: 30rem;
+    color: aliceblue;
+    background-color: black;
+}
