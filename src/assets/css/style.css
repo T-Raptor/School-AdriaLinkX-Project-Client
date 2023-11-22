@@ -61,6 +61,14 @@ body {
     font-family: Arial, sans-serif;
     font-size: 20px;
 }
+iframe {
+    margin:75px;
+    display: inline;
+}
+form{
+    display: inline;
+    border-left: 5px solid green ;
+}
 
 .calendarTime {
     float: right;
@@ -74,8 +82,8 @@ body {
     border: 2px solid #ccc; /* Increased border size */
     border-radius: 10px; /* Increased border radius */
     /*float: right;*/
-    margin-bottom: 150px;
-    margin-top: 100px;
+    margin-bottom: 50px;
+    margin-top: 25px;
 
 }
 
@@ -127,8 +135,22 @@ button:hover {
 
 label {
     margin-right: 50px;
+    font-size: 20px;
+
 }
 select {
     padding: 10px;
 }
+
+#selectedDate{
+    font-size: 20px;
+}
+#timeing {
+    margin-top: 25px;
+}
+#reserve {
+    margin-top: 25px;
+
+}
+
 
