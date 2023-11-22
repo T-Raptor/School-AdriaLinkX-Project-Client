@@ -38,7 +38,7 @@ function createColoniesLayer() {
         }),
         style: new ol.style.Style({
             image: new ol.style.Icon({
-                src: 'assets/images/location_map_icon.png',
+                src: 'assets/images/generic_marker.png',
                 tileSize: 256,
                 scale: 0.008
             })
