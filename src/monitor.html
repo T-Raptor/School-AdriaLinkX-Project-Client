@@ -5,150 +5,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monitoring page</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-
-        body {
-            font-family: Roboto, Helvetica, sans-serif;
-            padding: 1.25rem 1.5rem;
-        }
-
-        main {
-            display: flex;
-            justify-content: space-between;
-            height: 75vh;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-around;
-            justify-items: center;
-            height: 5vh;
-            margin-bottom: 4vh;
-        }
-
-        h1 {
-            width: fit-content;
-            margin: 0 auto 1vh auto;
-        }
-
-        #template-overlay {
-            position: absolute;
-            top: 5.5vh;
-            left: 0;
-            z-index: -1;
-            border: 0;
-            width: 100%;
-            opacity: 0.3;
-        }
-
-        #timedate {
-            width: fit-content;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            align-self: center;
-        }
-
-        #timedate p {
-            margin: 0;
-        }
-
-        #timeline {
-            width: 75%;
-        }
-
-        #timeline-render {
-            height: 80%;
-            border: 1px solid black;
-        }
-
-        #timeline-text {
-            margin-top: 0.2rem;
-            font-size: 0.8rem;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        #timeline-text p {
-            margin: 0;
-        }
-
-        #pause_now {
-            width: 30px;
-        }
-
-        #pause_now img {
-            width: 100%;
-            border-radius: 20%;
-            background-color: rgba(0, 0, 0, 0.1);
-            padding: 0.5rem;
-        }
-
-        #map {
-            width: 75%;
-            height: 100%;
-            border: black 1px solid;
-        }
-
-        .sidebar {
-            width: 150px;
-            border: black 1px solid;
-            padding: 1rem;
-        }
-    </style>
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/monitor.css">
 </head>
 
 <body>
-
-    <h1>Monitoring page</h1>
     <header>
-        <div id="timedate">
-            <p id="time">xx:xx</p>
-            <p id="date">xx/xx/xxxx</p>
-        </div>
-        <div id="timeline">
-            <div id="timeline-render"></div>
-            <div id="timeline-text">
-                <p>20xx</p>
-                <p>20xx</p>
-                <p>20xx</p>
-                <p>20xx</p>
+        <nav>
+            <img src="assets/media/horizontal-menu-circle.svg" alt="Menu icon" />
+            <div id="context-menu-content">
+                <a href="#">Shuttles</a>
+                <a href="#">Warnings</a>
+                <a href="#">Settings</a>
             </div>
-        </div>
-        <div id="pause_now">
-            <a href="#"><img src="assets/media/button-pause-2-1.svg" alt="Timeline pause button" /></a>
-        </div>
+        </nav>
+        <h1>Monitoring</h1>
     </header>
     <main>
-        <section class="sidebar">
-            <h2>Shuttles</h2>
-            <hr>
-            <div>
-                <p>Shuttle 1</p>
-                <p>Paris <--> Rome</p>
+        <div id="top" class="grid-container">
+            <div id="timedate">
+                <p id="time">xx:xx</p>
+                <p id="date">xx/xx/xxxx</p>
             </div>
-            <div>
-                <p>Shuttle 2</p>
-                <p>Madrid <--> Rome</p>
+            <div id="timeline">
+                <a href="#" id="timeline-bar"></a>
+                <div id="timeline-line"></div>
+                <div id="timeline-text">
+                    <p>20xx</p>
+                    <p>20xx</p>
+                    <p>20xx</p>
+                    <p>20xx</p>
+                </div>
+                <a href="#" id="pause-button"><img src="assets/media/button-pause-2-1.svg" alt="Timeline pause button" /></a>
             </div>
+        </div>
+        <div id="content" class="grid-container">
+            <section class="sidebar">
+                <h2>Shuttles</h2>
+                <hr>
+                <div>
+                    <p>Shuttle 1</p>
+                    <p>Paris <--> Rome</p>
+                </div>
+                <div>
+                    <p>Shuttle 2</p>
+                    <p>Madrid <--> Rome</p>
+                </div>
+            </section>
+            <div id="map"></div>
+            <section class="sidebar">
+                <h2>Warnings</h2>
+                <hr>
+                <div style=" display: flex;">
+                    <img src="assets/media/warning-triangle-2.svg" alt="Warning icon" />
+                <div>
+                    <p>Track Blocked</p>
+                    <p>Madrid <--> Paris</p>
+                </div>
+        </div>
         </section>
-        <div id="map"></div>
-        <section class="sidebar"">
-<h2>Warnings</h2>
-<hr>
-<div style=" display: flex;">
-            <img src="assets/media/warning-triangle-2.svg" alt="Warning icon" />
-            <div>
-                <p>Track Blocked</p>
-                <p>Madrid <--> Paris</p>
-            </div>
-            </div>
-        </section>
+        </div>
     </main>
 
     <a href="index.html"><button>Go to index</button></a>
-
 </body>
 
 </html>
