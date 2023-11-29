@@ -1,11 +1,18 @@
+"use strict";
+
 document.addEventListener('DOMContentLoaded', function () {
     const prevMonthBtn = document.querySelector('#prevMonth');
     const nextMonthBtn = document.querySelector('#nextMonth');
     const currentMonthYear = document.querySelector('#currentMonthYear');
     const calendarBody = document.querySelector('#calendarBody');
     const selectedDateInput = document.querySelector('#selectedDate');
+    const reservationForm = document.querySelector('#reservationForm');
     const submitForm = document.querySelector('#submitForm');
-    // const routeDescription = document.querySelector('#routeDescription');
+    const reservationDetails = document.querySelector('#reservationDetails');
+
+
+    updateDetails();
+
 
     let currentDate = new Date(),
         currentMonth = currentDate.getMonth(),
@@ -14,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function renderCalendar() {
         calendarBody.innerHTML = '';
         const firstDay = new Date(currentYear, currentMonth, 1),
-            lastDay = new Date(currentYear, currentMonth + 1 , 0);
+            lastDay = new Date(currentYear, currentMonth + 1, 0);
 
         currentMonthYear.textContent = new Intl.DateTimeFormat('en-US', {
             month: 'long',
@@ -73,6 +80,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const selectedTime = document.querySelector('#timeing').value;
         const routes = document.querySelector('#routes').value;
 
+
         // Validate that both date and time are selected
         if (selectedDate && selectedTime && routes) {
             const selectedDateTime = new Date(selectedDate + 'T' + selectedTime);
@@ -88,6 +96,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 localStorage.setItem('reservation', JSON.stringify(reservation));
                 alert('Thank you for using AdriaLinkX. Your reservation has been placed.');
+                reservationForm.style.display = 'none';
+                reservationDetails.innerHTML = `
+                    <p>Date: ${reservation.date}</p>
+                    <p>Time: ${reservation.time}</p>
+                    <p>Route: ${reservation.routes}</p>
+                `;
+                reservationDetails.style.display = 'block';
+
             } else {
                 alert('Please select a future date and time.');
             }
@@ -98,10 +114,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function showDescription() {
         const routes = document.querySelector('#routes').value;
-    // routeDescription.textContent = routes;
+        // routeDescription.textContent = routes;
         let description = "";
 
-        switch(routes) {
+        switch (routes) {
             case "route1":
                 description = "Description for Adrial A.";
                 break;
@@ -114,9 +130,38 @@ document.addEventListener('DOMContentLoaded', function () {
             default:
                 description = "Select a route to see the description.";
         }
-        document.querySelector('#routeDescription').innerText  = description;
+        document.querySelector('#routeDescription').innerText = description;
     }
-    document.querySelector('#routes').addEventListener('change', showDescription);
 
+    document.querySelector('#routes').addEventListener('change', showDescription);
 });
+
+//get the local storage
+function updateDetails() {
+    const reservation = JSON.parse(localStorage.getItem('reservation'));
+    console.log('Reservation:', reservation);
+
+    if (reservation) {
+        document.querySelector('#selectedDate').value = reservation.date;
+        document.querySelector('#timeing').value = reservation.time;
+        document.querySelector('#routes').value = reservation.routes;
+    }
+
+    const getDetailsElement = document.querySelector('#reservationDetails');
+    if (getDetailsElement) {
+        getDetailsElement.innerHTML = `
+                <p>Date: ${reservation.date}</p>
+                <p>Time: ${reservation.time}</p>
+                <p>Route: ${reservation.routes}</p>
+            `;
+    }
+
+}
+
+
+
+
+
+
+
 

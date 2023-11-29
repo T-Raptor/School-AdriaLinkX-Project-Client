@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Simple Calendar</title>
+  <title>Reservation</title>
   <link rel="stylesheet" href="assets/css/reset.css">
 
   <link rel="stylesheet" href="assets/css/style.css">
@@ -14,7 +14,7 @@
 <body>
 <iframe src="https://maps.app.goo.gl/Ji3qQEhxYHKJsNCX8" width="650" height="500" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 
-<form>
+<form id="reservationForm">
 
 <div class="calendarTime">
 
@@ -44,8 +44,10 @@
 
   <button type="button" id="submitForm">Checkout</button>
 </div>
+
 </form>
 
+<p id="reservationDetails" style="display: none;"></p>
 
 
 
