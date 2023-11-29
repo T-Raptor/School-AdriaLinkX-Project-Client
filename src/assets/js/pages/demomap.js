@@ -122,3 +122,5 @@ function createTracksLayer() {
         })
     });
 }
+
+export {createMap};
