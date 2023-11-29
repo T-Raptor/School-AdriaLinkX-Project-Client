@@ -9,6 +9,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const reservationForm = document.querySelector('#reservationForm');
     const submitForm = document.querySelector('#submitForm');
     const reservationDetails = document.querySelector('#reservationDetails');
+    const addTimeButton = document.querySelector('#addTime');
+    const additionalTimesContainer = document.querySelector('#additionalTimes');
+
+    let timeCounter = 1;
 
 
     updateDetails();
@@ -111,6 +115,24 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Please select both date and time.');
         }
     });
+
+    addTimeButton.addEventListener('click', function () {
+        const newTimeLabel = document.createElement('label');
+        newTimeLabel.textContent = 'Select Another Time';
+
+        const newTimeInput = document.createElement('input');
+        newTimeInput.type = 'time';
+        newTimeInput.id = 'timeing' + timeCounter;
+        newTimeInput.name = 'timeing';
+        newTimeInput.className = 'timeing'; // Use className instead of class
+
+        additionalTimesContainer.appendChild(newTimeLabel);
+        additionalTimesContainer.appendChild(newTimeInput);
+
+        timeCounter++;
+    });
+
+
 
     function showDescription() {
         const routes = document.querySelector('#routes').value;
