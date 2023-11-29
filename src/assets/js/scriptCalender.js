@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function renderCalendar() {
         calendarBody.innerHTML = '';
         const firstDay = new Date(currentYear, currentMonth, 1),
-            lastDay = new Date(currentYear, currentMonth + 1, 0);
+            lastDay = new Date(currentYear, currentMonth + 1 , 0);
 
         currentMonthYear.textContent = new Intl.DateTimeFormat('en-US', {
             month: 'long',
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Add click event to capture selected date
                 dayElement.addEventListener('click', function (event) {
                     event.preventDefault();
-                    const selectedDate = new Date(currentYear, currentMonth, i);
+                    const selectedDate = new Date(currentYear, currentMonth, i + 1);
                     const formattedDate = selectedDate.toISOString().split('T')[0];
                     selectedDateInput.value = formattedDate;
                 });
