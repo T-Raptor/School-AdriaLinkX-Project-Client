@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const additionalTimesContainer = document.querySelector('#additionalTimes');
 
     let timeCounter = 1;
+    let additionalTime = null;
+
 
 
     updateDetails();
@@ -83,10 +85,15 @@ document.addEventListener('DOMContentLoaded', function () {
         const selectedDate = document.querySelector('#selectedDate').value;
         const selectedTime = document.querySelector('#timeing').value;
         const routes = document.querySelector('#routes').value;
+        const additionalTimes = document.querySelectorAll('.timeing');
 
+        if (additionalTimes.length > 0) {
+            // Get the first additional time (you may modify this logic based on your requirements)
+            additionalTime = additionalTimes[0].value;
+        }
 
         // Validate that both date and time are selected
-        if (selectedDate && selectedTime && routes) {
+        if (selectedDate && selectedTime && additionalTime && routes) {
             const selectedDateTime = new Date(selectedDate + 'T' + selectedTime);
             const currentDateTime = new Date();
 
@@ -95,6 +102,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const reservation = {
                     date: selectedDate,
                     time: selectedTime,
+                    additionalTime: additionalTime,
                     routes: routes
                 };
 
@@ -104,6 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 reservationDetails.innerHTML = `
                     <p>Date: ${reservation.date}</p>
                     <p>Time: ${reservation.time}</p>
+                    <p>Additional Time: ${reservation.additionalTime}</p>
                     <p>Route: ${reservation.routes}</p>
                 `;
                 reservationDetails.style.display = 'block';
