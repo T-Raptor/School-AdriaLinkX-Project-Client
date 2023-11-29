@@ -9,8 +9,6 @@ before_script:
 
 validateHTML:
   stage: QA
-  only:
-    - main
   script:
     - npm run validate-html
 
@@ -18,8 +16,6 @@ SonarQube:
   stage: QA
   needs:
     - validateHTML
-  only:
-    - main
   script:
     - npm run validate-sonar-ci
 
