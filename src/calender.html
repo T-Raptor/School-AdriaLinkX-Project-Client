@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Reservation</title>
+  <link rel="stylesheet" href="assets/css/reset.css">
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="assets/js/scriptCalender.js"></script>
+
+</head>
+<body>
+<iframe src="https://maps.app.goo.gl/Ji3qQEhxYHKJsNCX8" width="650" height="500" style="border:0;" allowfullscreen="" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+<form id="reservationForm">
+
+<div class="calendarTime">
+
+  <div class="calendar">
+  <div class="calendar-header">
+    <button id="prevMonth">&#9665;</button>
+    <div id="currentMonthYear"></div>
+    <button id="nextMonth">&#9655;</button>
+  </div>
+  <div class="calendar-body" id="calendarBody"></div>
+</div>
+  <div class="labels">
+    <label for="selectedDate">Select Date:</label>
+    <input type="text" id="selectedDate" readonly>
+<!--    <label for="timeing">Select Time</label>-->
+<!--    <input type="time" id="timeing">-->
+
+    <label for="timeing">Select Time</label>
+    <input type="text" id="timeing" name="timeing">
+
+    <div id="additionalTimes"></div>
+
+    <button type="button" id="addTime">+</button>
+
+    <label for="routes"> Select Routes</label>
+    <select id="routes" name="routes">
+      <option value="route1">Adrial A</option>
+      <option value="route2">Adrial B</option>
+      <option value="route3">Adrial C</option>
+<!--      <option value="route4">Adrial A</option>-->
+    </select>
+    <p id="routeDescription"></p>
+
+  </div>
+
+  <button type="button" id="submitForm">Checkout</button>
+</div>
+
+</form>
+
+<p id="reservationDetails" style="display: none;"></p>
+
+
+
+</body>
+</html>
+
+
+
+
+
