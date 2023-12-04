@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoring page</title>
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/monitor.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <img src="assets/media/horizontal-menu-circle.svg" alt="Menu icon">
+            <div id="context-menu-content">
+                <a href="#">Shuttles</a>
+                <a href="#">Warnings</a>
+                <a href="#">Settings</a>
+            </div>
+        </nav>
+        <h1>Monitoring</h1>
+    </header>
+    <main>
+        <div id="top" class="grid-container">
+            <div id="timedate">
+                <p id="time">xx:xx</p>
+                <p id="date">xx/xx/xxxx</p>
+            </div>
+            <div id="timeline">
+                <a href="#" id="timeline-bar"></a>
+                <div id="timeline-line"></div>
+                <div id="timeline-text">
+                    <p>20xx</p>
+                    <p>20xx</p>
+                    <p>20xx</p>
+                    <p>20xx</p>
+                </div>
+                <a href="#" id="pause-button"><img src="assets/media/button-pause-2-1.svg" alt="Timeline pause button"></a>
+            </div>
+        </div>
+        <div id="content" class="grid-container">
+            <section class="sidebar">
+                <h2>Shuttles</h2>
+                <hr>
+                <div>
+                    <p>Shuttle 1</p>
+                    <p>Paris &lt;&mdash;&gt; Rome</p>
+                </div>
+                <div>
+                    <p>Shuttle 2</p>
+                    <p>Madrid &lt;&mdash;&gt; Rome</p>
+                </div>
+            </section>
+            <div id="map"></div>
+            <section class="sidebar">
+                <h2>Warnings</h2>
+                <hr>
+                <div style=" display: flex;">
+                    <img src="assets/media/warning-triangle-2.svg" alt="Warning icon">
+                <div>
+                    <p>Track Blocked</p>
+                    <p>Madrid &lt;&mdash;&gt; Paris</p>
+                </div>
+        </div>
+        </section>
+        </div>
+    </main>
+
+    <a href="index.html" style="text-decoration: none; line-height: 2rem; color: white; padding: 0.2rem; background-color: black;">Go to monitor</a>
+</body>
+
+</html>
