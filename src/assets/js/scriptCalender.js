@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function () {
         newTimeLabel.textContent = 'Select Another Time';
 
         const newTimeInput = document.createElement('input');
-        newTimeInput.type = 'time';
+        newTimeInput.type = 'text';
         newTimeInput.id = 'timeing' + timeCounter;
         newTimeInput.name = 'timeing';
         newTimeInput.className = 'timeing'; // Use className instead of class
