@@ -171,6 +171,9 @@ document.addEventListener('DOMContentLoaded', function () {
 function updateDetails() {
     const reservation = JSON.parse(localStorage.getItem('reservation'));
     console.log('Reservation:', reservation);
+    if (reservation === null) {
+        return;
+    }
 
     if (reservation) {
         document.querySelector('#selectedDate').value = reservation.date;
