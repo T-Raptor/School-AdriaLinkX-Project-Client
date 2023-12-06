@@ -3,9 +3,10 @@ body {
     font-family: Arial, sans-serif;
     font-size: 20px;
 }
-iframe {
+#map-route-picker {
     margin:75px;
-    display: inline;
+    width:70vh;
+    height: 70vh;
 }
 form{
     display: inline;
