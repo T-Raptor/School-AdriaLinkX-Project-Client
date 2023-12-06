@@ -51,8 +51,6 @@ function renderCalendar() {
     }
 }
 
-renderCalendar();
-
 
 prevMonthBtn.addEventListener('click', function (event) {
     event.preventDefault();
