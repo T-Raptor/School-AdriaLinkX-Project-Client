@@ -1,5 +1,5 @@
 "use strict";
-import { createMap, drawStation } from "../components/map.js";
+import { createMap, drawStation, drawShuttle } from "../components/map.js";
 
 document.addEventListener("DOMContentLoaded", init);
 function init() {
@@ -7,6 +7,10 @@ function init() {
 
     stations.forEach(station => {
         drawStation(map, station, locStations[station]);
+    });
+
+    shuttles.forEach(shuttle => {
+        ftShuttles[shuttle] = drawShuttle(map, shuttle, locShuttles[shuttle]);
     });
 
     setInterval(moveAndUpdate, 50);

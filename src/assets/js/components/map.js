@@ -95,6 +95,16 @@ function drawStation(map, name, location) {
     return feature;
 }
 
+function drawShuttle(map, name, location) {
+    const feature = new ol.Feature(
+        new ol.geom.Point(
+            ol.proj.fromLonLat(location)
+        )
+    );
+    map.lyrShuttles.getSource().addFeature(feature);
+    return feature;
+}
 
 
-export {createMap, drawStation};
+
+export {createMap, drawStation, drawShuttle};
