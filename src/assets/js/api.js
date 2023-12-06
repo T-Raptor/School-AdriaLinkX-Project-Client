@@ -4,7 +4,7 @@ let api = null;
 
 
 function getStations(successHandler) {
-    return get("stations", rsp => rsp.json().then(JSON.parse).then(successHandler));
+    return get("stations", rsp => rsp.json().then(successHandler));
 }
 
 
