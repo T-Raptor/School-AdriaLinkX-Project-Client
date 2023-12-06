@@ -1,13 +1,22 @@
-function poc() {
-    const messageBody = {
-        "quote": "some quote"
-    };
-    get("quotes/1");
-    post("quotes", messageBody);
-    put("quotes/1", messageBody);
+"use strict";
+import { loadConfig } from "./config.js";
+let api = null;
+
+
+function getStations(successHandler) {
+    return get("stations", successHandler);
 }
 
+
 function get(uri, successHandler = logJson, failureHandler = logError) {
+    if (api === null) {
+        loadConfig(a => {
+            api = a;
+            get(uri, successHandler, failureHandler);
+        });
+        return;
+    }
+
     const request = new Request(api + uri, {
         method: 'GET',
     });
@@ -16,6 +25,14 @@ function get(uri, successHandler = logJson, failureHandler = logError) {
 }
 
 function post(uri, body, successHandler = logJson, failureHandler = logError) {
+    if (api === null) {
+        loadConfig(a => {
+            api = a;
+            post(uri, body, successHandler, failureHandler);
+        });
+        return;
+    }
+
     const request = new Request(api + uri, {
         method: 'POST',
         headers: {
@@ -28,6 +45,14 @@ function post(uri, body, successHandler = logJson, failureHandler = logError) {
 }
 
 function put(uri, body, successHandler = logJson, failureHandler = logError) {
+    if (api === null) {
+        loadConfig(a => {
+            api = a;
+            put(uri, body, successHandler, failureHandler);
+        });
+        return;
+    }
+
     const request = new Request(api + uri, {
         method: 'PUT',
         headers: {
@@ -40,6 +65,14 @@ function put(uri, body, successHandler = logJson, failureHandler = logError) {
 }
 
 function remove(uri, successHandler = logJson, failureHandler = logError) {
+    if (api === null) {
+        loadConfig(a => {
+            api = a;
+            remove(uri, successHandler, failureHandler);
+        });
+        return;
+    }
+
     const request = new Request(api + uri, {
         method: 'DELETE',
     });
@@ -58,3 +91,6 @@ function logError(error) {
 function call(request, successHandler, errorHandler) {
     fetch(request).then(successHandler).catch(errorHandler);
 }
+
+
+export { getStations };
