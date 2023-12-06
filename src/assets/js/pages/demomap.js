@@ -3,7 +3,12 @@ import { createMap, drawStation } from "../components/map.js";
 
 document.addEventListener("DOMContentLoaded", init);
 function init() {
-    createMap("centra-map");
+    const map = createMap("centra-map");
+
+    stations.forEach(station => {
+        drawStation(map, station, locStations[station]);
+    });
+
     setInterval(moveAndUpdate, 50);
 }
 
@@ -13,7 +18,19 @@ function moveAndUpdate() {
 }
 
 
+const stations = [
+    "Adria",
+    "Bdria",
+    "Cdria",
+    "Ddria"
+];
 
+const locStations = {
+    "Adria": [4.34878, 50.85045],
+    "Bdria": [2.3522, 48.8566],
+    "Cdria": [-0.1276, 51.5074],
+    "Ddria": [10.7522, 59.9139]
+};
 
 
 const shuttles = [
@@ -26,7 +43,6 @@ const locShuttles = {
     "ADD-BB2-47D": [56.8478695, -6.1568562]
 };
 
-
 const ftShuttles = {};
 
 
@@ -35,7 +51,7 @@ function applyRandomMovement() {
     shuttles.forEach(shuttle => {
         locShuttles[shuttle][0] += Math.random()*2-1;
         locShuttles[shuttle][1] += Math.random()*2-1;
-    })
+    });
 }
 
 function updateShuttles() {
