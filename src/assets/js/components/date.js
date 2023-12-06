@@ -1,8 +1,5 @@
 // date.js
 "use strict";
-
-document.addEventListener("DOMContentLoaded", init);
-
 const prevMonthBtn = document.querySelector('#prevMonth');
 const nextMonthBtn = document.querySelector('#nextMonth');
 const currentMonthYear = document.querySelector('#currentMonthYear');
@@ -12,10 +9,6 @@ const calendarBody = document.querySelector('#calendarBody');
 let currentDate = new Date(),
     currentMonth = currentDate.getMonth(),
     currentYear = currentDate.getFullYear();
-
-function init() {
-    renderCalendar();
-}
 
 
 function renderCalendar() {
