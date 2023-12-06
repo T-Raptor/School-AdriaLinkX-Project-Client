@@ -1,0 +1,112 @@
+
+body {
+    font-family: Arial, sans-serif;
+    font-size: 20px;
+}
+#map-route-picker {
+    margin:75px;
+    width:70vh;
+    height: 70vh;
+}
+form{
+    display: inline;
+}
+
+.calendarTime {
+    float: right;
+    margin-right: 100px;
+
+}
+
+.calendar {
+    width: 450px; /* Increased width */
+    /*margin: 20px 100px;*/
+    border: 2px solid #ccc; /* Increased border size */
+    border-radius: 10px; /* Increased border radius */
+    /*float: right;*/
+    margin-bottom: 50px;
+    margin-top: 25px;
+
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f2f2f2;
+    padding: 15px; /* Increased padding */
+}
+
+#currentMonthYear {
+    margin: 0;
+    font-size: 20px; /* Increased font size */
+}
+
+button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 8px 15px; /* Increased padding */
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px; /* Increased font size */
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.calendar-body {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px; /* Increased gap */
+    padding: 15px; /* Increased padding */
+}
+
+.day {
+    text-align: center;
+    padding: 10px; /* Increased padding */
+    border: 2px solid #ddd; /* Increased border size */
+    background-color: #f9f9f9;
+    font-size: 16px; /* Increased font size */
+}
+
+.day:hover {
+    background-color: #ddd;
+}
+
+label {
+    margin-right: 50px;
+    font-size: 20px;
+    display: block;
+    margin-top: 25px;
+
+}
+
+#selectedDate{
+    font-size: 20px;
+}
+
+#reserve {
+    margin-top: 25px;
+
+}
+select{
+    font-size: 20px;
+}
+
+#submitForm{
+    margin-top: 25px;
+    margin-left: 50px;
+    font-size: 20px;
+}
+#timeing{
+    font-size: 20px;
+
+}
+.timeing{
+    font-size: 20px;
+    margin-top: 25px;
+}
+
+

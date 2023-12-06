@@ -4,9 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitoring</title>
+    <title>Monitoring page</title>
     <link rel="stylesheet" href="assets/css/reset.css">
     <link rel="stylesheet" href="assets/css/pages/monitor.css">
+    <script src="https://cdn.jsdelivr.net/npm/ol@v7.1.0/dist/ol.js"></script>
+    <script src="assets/js/pages/monitor.js" type="module"></script>
 </head>
 
 <body>
@@ -44,18 +46,9 @@
             <section class="sidebar clickables">
                 <h2>Shuttles</h2>
                 <hr>
-                <div>
-                    <p>AE5-BSD-XES</p>
-                </div>
-                <div>
-                    <p>AE6-BSD-XES</p>
-                </div>
-                <div>
-                    <p>C3D-BSD-XES</p>
-                </div>
-                <div>
-                    <p>[SHUTTLE_ID]</p>
-                </div>
+                <h2>Shuttles</h2>
+                <hr>
+                <ul id="shuttles"></ul>
             </section>
             <div id="map"></div>
             <section class="sidebar warnings">
@@ -74,6 +67,16 @@
                         <p>[WARNING_TYPE]</p>
                         <p>[WARNING_LOCATION]</p>
                     </div>
+            <section class="sidebar clickables">
+                <h2>Shuttles</h2>
+                <hr>
+                <ul id="shuttles"></ul>
+            </section>
+            <div id="centra-map"></div>
+            <section class="sidebar">
+                <h2>Warnings</h2>
+                <hr>
+                <ul id="notices"></ul>
             </section>
         </div>
     </main>
@@ -82,5 +85,4 @@
         style="text-decoration: none; line-height: 2rem; color: white; padding: 0.2rem; background-color: black;">Go to
         monitor</a>
 </body>
-
 </html>

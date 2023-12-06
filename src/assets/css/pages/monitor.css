@@ -133,11 +133,11 @@ main {
     padding: 1rem;
 }
 
-.sidebar > div{
+.sidebar li{
     padding: 0.5rem;
 }
 
-.clickables > div {
+.clickables li {
     margin-bottom: 1rem;
     border: black 1px dashed;
     padding: 0.5rem;
