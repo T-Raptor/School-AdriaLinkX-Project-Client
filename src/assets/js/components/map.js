@@ -117,6 +117,21 @@ function updateShuttle(shuttle, location) {
     );
 }
 
+function drawTrack(map, station1, station2) {
+    const feature = new ol.Feature(
+        new ol.geom.LineString([
+            station1.feature.getGeometry().getCoordinates(),
+            station2.feature.getGeometry().getCoordinates()
+        ])
+    );
+    map.lyrTracks.getSource().addFeature(feature);
+    return {
+        "station1": station1,
+        "station2": station2,
+        "feature": feature
+    };
+}
 
 
-export {createMap, drawStation, drawShuttle, updateShuttle};
+
+export {createMap, drawStation, drawShuttle, updateShuttle, drawTrack};

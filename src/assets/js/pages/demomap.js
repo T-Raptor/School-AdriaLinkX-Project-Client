@@ -1,16 +1,22 @@
 "use strict";
-import { createMap, drawStation, drawShuttle, updateShuttle } from "../components/map.js";
+import { createMap, drawStation, drawShuttle, updateShuttle, drawTrack } from "../components/map.js";
 
 document.addEventListener("DOMContentLoaded", init);
 function init() {
     const map = createMap("centra-map");
 
     stations.forEach(station => {
-        drawStation(map, station, locStations[station]);
+        entStations[station] = drawStation(map, station, locStations[station]);
     });
 
     shuttles.forEach(shuttle => {
         entShuttles[shuttle] = drawShuttle(map, shuttle, locShuttles[shuttle]);
+    });
+
+    tracks.forEach(track => {
+        const nameStation1 = track[0];
+        const nameStation2 = track[1];
+        drawTrack(map, entStations[nameStation1], entStations[nameStation2]);
     });
 
     setInterval(moveAndUpdate, 50);
@@ -35,6 +41,16 @@ const locStations = {
     "Cdria": [-0.1276, 51.5074],
     "Ddria": [10.7522, 59.9139]
 };
+
+const entStations = {};
+
+
+const tracks = [
+    ["Adria", "Bdria"],
+    ["Bdria", "Cdria"],
+    ["Cdria", "Adria"],
+    ["Adria", "Ddria"]
+];
 
 
 const shuttles = [
