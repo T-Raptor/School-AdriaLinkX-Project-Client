@@ -22,8 +22,8 @@ function fetchAndDrawStations(map) {
 
 
 
-const warnings = ["Track Blocked At: \n Adria <-> Badria",
-                          "Track Blocked At: \n Adria <-> Cedria",
+const warnings = ["Track Blocked At: \n Adria &lt;-&gt; Badria",
+                          "Track Blocked At: \n Adria &lt;-&gt; Cedria",
                           "Some heavy wind expect in Badria",
                           "Rain expected in Cedria",
                           "Storm expected in Dadria"];
