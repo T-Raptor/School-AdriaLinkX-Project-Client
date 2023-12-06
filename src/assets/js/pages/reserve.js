@@ -1,5 +1,5 @@
 "use strict";
-import {renderCalendar,nextMonthBtn,prevMonthBtn} from "../components/date";
+import {renderCalendar,nextMonthBtn,prevMonthBtn} from "../components/date.js";
 import { createMap } from "../components/map.js";
 
 
