@@ -49,6 +49,7 @@ main {
 #top {
     justify-content: space-between;
     margin-bottom: 1vh;
+    height: 6rem;
 }
 
 /* Time and date styles */
@@ -71,7 +72,6 @@ main {
     border-radius: 25px;
     background-color: #F3F3F3;
     padding: 1rem 2rem 1.25rem;
-    height: 6rem;
 }
 
 #timeline-bar {
