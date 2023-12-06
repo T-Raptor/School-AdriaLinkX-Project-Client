@@ -1,5 +1,5 @@
 "use strict";
-import { createMap, drawStation, drawShuttle } from "../components/map.js";
+import { createMap, drawStation, drawShuttle, updateShuttle } from "../components/map.js";
 
 document.addEventListener("DOMContentLoaded", init);
 function init() {
@@ -10,7 +10,7 @@ function init() {
     });
 
     shuttles.forEach(shuttle => {
-        ftShuttles[shuttle] = drawShuttle(map, shuttle, locShuttles[shuttle]);
+        entShuttles[shuttle] = drawShuttle(map, shuttle, locShuttles[shuttle]);
     });
 
     setInterval(moveAndUpdate, 50);
@@ -47,7 +47,7 @@ const locShuttles = {
     "ADD-BB2-47D": [56.8478695, -6.1568562]
 };
 
-const ftShuttles = {};
+const entShuttles = {};
 
 
 
@@ -60,8 +60,6 @@ function applyRandomMovement() {
 
 function updateShuttles() {
     for (const shuttle of shuttles) {
-        ftShuttles[shuttle].getGeometry().setCoordinates(
-            ol.proj.fromLonLat(locShuttles[shuttle])
-        );
+        updateShuttle(entShuttles[shuttle], locShuttles[shuttle]);
     }
 }

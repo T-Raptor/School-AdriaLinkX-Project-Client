@@ -92,7 +92,10 @@ function drawStation(map, name, location) {
         )
     );
     map.lyrStations.getSource().addFeature(feature);
-    return feature;
+    return {
+        "name": name,
+        "feature": feature
+    };
 }
 
 function drawShuttle(map, name, location) {
@@ -102,9 +105,18 @@ function drawShuttle(map, name, location) {
         )
     );
     map.lyrShuttles.getSource().addFeature(feature);
-    return feature;
+    return {
+        "name": name,
+        "feature": feature
+    };
+}
+
+function updateShuttle(shuttle, location) {
+    shuttle.feature.getGeometry().setCoordinates(
+        ol.proj.fromLonLat(location)
+    );
 }
 
 
 
-export {createMap, drawStation, drawShuttle};
+export {createMap, drawStation, drawShuttle, updateShuttle};
