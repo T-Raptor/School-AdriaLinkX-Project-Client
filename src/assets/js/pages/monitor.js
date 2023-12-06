@@ -15,7 +15,7 @@ function init() {
 function fetchAndDrawStations(map) {
     getStations((stations) => {
         for (const station of stations) {
-            drawStation(map, station.name, [station.latitude, station.longitude]);
+            drawStation(map, station.name, [station.longitude, station.latitude]);
         }
     });
 }
