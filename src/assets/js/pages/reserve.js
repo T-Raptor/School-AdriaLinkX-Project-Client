@@ -1,6 +1,8 @@
 "use strict";
+import { createMap } from "../components/map.js";
 
 document.addEventListener('DOMContentLoaded', function () {
+    createMap("map-route-picker");
     const prevMonthBtn = document.querySelector('#prevMonth');
     const nextMonthBtn = document.querySelector('#nextMonth');
     const currentMonthYear = document.querySelector('#currentMonthYear');
