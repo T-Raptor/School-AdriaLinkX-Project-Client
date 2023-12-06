@@ -7,6 +7,10 @@ function getStations(successHandler) {
     return get("stations", rsp => rsp.json().then(successHandler));
 }
 
+function getTracks(successHandler) {
+    return get("tracks", rsp => rsp.json().then(successHandler));
+}
+
 
 function get(uri, successHandler = logJson, failureHandler = logError) {
     if (api === null) {

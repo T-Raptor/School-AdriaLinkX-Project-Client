@@ -1,4 +1,6 @@
 "use strict";
+import { getStations, getTracks } from "../api.js";
+
 const MAP_TILES_URL = 'https://api.maptiler.com/maps/basic-v2/256/tiles.json?key=v7RhHG7ZxC29bKCh6207';
 const MAP_VIEW_CENTER = ol.proj.fromLonLat([4.34878, 50.85045]);
 const MAP_VIEW_ZOOM = 4;
@@ -133,5 +135,30 @@ function drawTrack(map, station1, station2) {
 }
 
 
+function fetchAndDrawStations(map, successHandler) {
+    getStations((stations) => {
+        const entStations = {};
+        for (const station of stations) {
+            entStations[station.name] = drawStation(map, station.name, [station.longitude, station.latitude]);
+        }
+        successHandler(map, entStations);
+    });
+}
 
-export {createMap, drawStation, drawShuttle, updateShuttle, drawTrack};
+function fetchAndDrawTracks(map, entStations) {
+    getTracks((tracks) => {
+        for (const track of tracks) {
+            const entStation1 = entStations[track.station1.name];
+            const entStation2 = entStations[track.station2.name];
+            drawTrack(map, entStation1, entStation2);
+        }
+    });
+}
+
+function fetchAndDrawStationsAndTracks(map) {
+    fetchAndDrawStations(map, fetchAndDrawTracks);
+}
+
+
+
+export {createMap, drawStation, drawShuttle, updateShuttle, drawTrack, fetchAndDrawStationsAndTracks};
