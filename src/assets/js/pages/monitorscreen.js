@@ -1,15 +1,11 @@
 "use strict";
-
-import {createMap} from "./demomap.js";
+import {createMap} from "../components/map.js";
 
 document.addEventListener("DOMContentLoaded", init);
-
 function init() {
-    createMap();
+    createMap("centra-map");
     displayWarnings();
     displayShuttles();
-    
-
 }
 
 
@@ -28,11 +24,7 @@ const shuttles = [
 ];
 
 function displayWarnings() {
-
-
     const warningList = document.querySelector("#notices");
-
-
 
     for (let i = 0; i < 2; i++) {
         const random =  warnings[Math.floor(Math.random() * warnings.length)];
@@ -53,7 +45,6 @@ function displayShuttles() {
     <li>${random}</li>
     <li class="material-icons">train</li>
     </ul>`
-        );}
-
-
+        );
+    }
 }
