@@ -4,7 +4,11 @@ let api = null;
 
 
 function getStations(successHandler) {
-    return get("stations", rsp => rsp.json().then(JSON.parse).then(successHandler));
+    return get("stations", rsp => rsp.json().then(successHandler));
+}
+
+function getTracks(successHandler) {
+    return get("tracks", rsp => rsp.json().then(successHandler));
 }
 
 
@@ -93,4 +97,4 @@ function call(request, successHandler, errorHandler) {
 }
 
 
-export { getStations };
+export { getStations, getTracks };

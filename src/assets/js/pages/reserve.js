@@ -1,10 +1,11 @@
 "use strict";
-import {renderCalendar,nextMonthBtn,prevMonthBtn} from "../components/date.js";
-import { createMap } from "../components/map.js";
+import { renderCalendar, nextMonthBtn, prevMonthBtn } from "../components/date.js";
+import { createMap, fetchAndDrawStationsAndTracks } from "../components/map.js";
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    createMap("centra-map");
+    const map = createMap("centra-map");
+    fetchAndDrawStationsAndTracks(map);
 
     const reservationForm = document.querySelector('#reservationForm');
     const submitForm = document.querySelector('#submitForm');
