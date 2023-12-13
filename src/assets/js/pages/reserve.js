@@ -1,13 +1,12 @@
 "use strict";
-import { createMap } from "../components/map.js";
+import { renderCalendar, nextMonthBtn, prevMonthBtn } from "../components/date.js";
+import { createMap, fetchAndDrawStationsAndTracks } from "../components/map.js";
+
 
 document.addEventListener('DOMContentLoaded', function () {
-    createMap("map-route-picker");
-    const prevMonthBtn = document.querySelector('#prevMonth');
-    const nextMonthBtn = document.querySelector('#nextMonth');
-    const currentMonthYear = document.querySelector('#currentMonthYear');
-    const calendarBody = document.querySelector('#calendarBody');
-    const selectedDateInput = document.querySelector('#selectedDate');
+    const map = createMap("centra-map");
+    fetchAndDrawStationsAndTracks(map);
+
     const reservationForm = document.querySelector('#reservationForm');
     const submitForm = document.querySelector('#submitForm');
     const reservationDetails = document.querySelector('#reservationDetails');
@@ -17,69 +16,13 @@ document.addEventListener('DOMContentLoaded', function () {
     let timeCounter = 1;
     let additionalTime = null;
 
+    renderCalendar();
+    nextMonthBtn;
+    prevMonthBtn;
 
 
     updateDetails();
 
-
-    let currentDate = new Date(),
-        currentMonth = currentDate.getMonth(),
-        currentYear = currentDate.getFullYear();
-
-    function renderCalendar() {
-        calendarBody.innerHTML = '';
-        const firstDay = new Date(currentYear, currentMonth, 1),
-            lastDay = new Date(currentYear, currentMonth + 1, 0);
-
-        currentMonthYear.textContent = new Intl.DateTimeFormat('en-US', {
-            month: 'long',
-            year: 'numeric'
-        }).format(firstDay);
-
-        ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(day => calendarBody.innerHTML += `<div class="day">${day}</div>`);
-
-        for (let i = 1 - firstDay.getDay(); i <= lastDay.getDate(); i++) {
-            const dayElement = document.createElement('div');
-            dayElement.className = 'day';
-
-            if (i > 0) {
-                dayElement.textContent = i;
-                if (currentDate.getDate() === i && currentDate.getMonth() === currentMonth && currentDate.getFullYear() === currentYear) dayElement.classList.add('current-day');
-
-                // Add click event to capture selected date
-                dayElement.addEventListener('click', function (event) {
-                    event.preventDefault();
-                    const selectedDate = new Date(currentYear, currentMonth, i + 1);
-                    const formattedDate = selectedDate.toISOString().split('T')[0];
-                    selectedDateInput.value = formattedDate;
-                });
-            }
-
-            calendarBody.appendChild(dayElement);
-        }
-    }
-
-    renderCalendar();
-
-    prevMonthBtn.addEventListener('click', function (event) {
-        event.preventDefault();
-        currentMonth--;
-        if (currentMonth < 0) {
-            currentMonth = 11;
-            currentYear--;
-        }
-        renderCalendar();
-    });
-
-    nextMonthBtn.addEventListener('click', function (event) {
-        event.preventDefault();
-        currentMonth++;
-        if (currentMonth > 11) {
-            currentMonth = 0;
-            currentYear++;
-        }
-        renderCalendar();
-    });
 
     submitForm.addEventListener('click', function (event) {
         event.preventDefault();
@@ -90,16 +33,16 @@ document.addEventListener('DOMContentLoaded', function () {
         const additionalTimes = document.querySelectorAll('.timeing');
 
         if (additionalTimes.length > 0) {
-            // Get the first additional time (you may modify this logic based on your requirements)
+
             additionalTime = additionalTimes[0].value;
         }
 
-        // Validate that both date and time are selected
+
         if (selectedDate && selectedTime && additionalTime && routes) {
             const selectedDateTime = new Date(selectedDate + 'T' + selectedTime);
             const currentDateTime = new Date();
 
-            // Compare with the current date and time
+
             if (selectedDateTime > currentDateTime) {
                 const reservation = {
                     date: selectedDate,
@@ -169,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelector('#routes').addEventListener('change', showDescription);
 });
 
-//get the local storage
+
 function updateDetails() {
     const reservation = JSON.parse(localStorage.getItem('reservation'));
     console.log('Reservation:', reservation);

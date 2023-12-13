@@ -1,25 +1,18 @@
 "use strict";
-import { createMap, drawStation } from "../components/map.js";
-import { getStations } from "../api.js";
+import { createMap, fetchAndDrawStationsAndTracks } from "../components/map.js";
 
 
 document.addEventListener("DOMContentLoaded", init);
 
 function init() {
     const map = createMap("centra-map");
-    fetchAndDrawStations(map);
+    fetchAndDrawStationsAndTracks(map);
     displayWarnings();
     displayShuttles();
 }
 
 
-function fetchAndDrawStations(map) {
-    getStations((stations) => {
-        for (const station of stations) {
-            drawStation(map, station.name, [station.longitude, station.latitude]);
-        }
-    });
-}
+
 
 
 
