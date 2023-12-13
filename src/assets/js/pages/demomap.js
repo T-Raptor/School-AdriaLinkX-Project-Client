@@ -19,14 +19,11 @@ function init() {
         drawTrack(map, entStations[nameStation1], entStations[nameStation2]);
     });
 
-    console.log("I S");
     notices.forEach(notice => {
-        console.log("I S");
         const name = notice.name;
         const location = notice.location;
         if (notice.type === "warning") {
             drawWarning(map, name, location);
-            console.log("fc");
         } else {
             drawBreak(map, name, location);
         }
