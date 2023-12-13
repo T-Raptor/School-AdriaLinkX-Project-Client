@@ -1,24 +1,67 @@
 "use strict";
 import { getStations, getTracks } from "../api.js";
 
+
 const MAP_TILES_URL = 'https://api.maptiler.com/maps/basic-v2/256/tiles.json?key=v7RhHG7ZxC29bKCh6207';
 const MAP_VIEW_CENTER = ol.proj.fromLonLat([4.34878, 50.85045]);
 const MAP_VIEW_ZOOM = 4;
 
+
 const MARKER_STATION_SRC = 'assets/images/generic_marker.png';
+const LAYER_STATIONS_STYLE =
+new ol.style.Style({
+    image: new ol.style.Icon({
+        src: MARKER_STATION_SRC,
+        tileSize: 256,
+        scale: 0.008
+    })
+});
+
 const MARKER_SHUTTLE_SRC = 'assets/images/green_marker.png';
-const MARKER_TRACK_COLOR = '#FF0000';
+const LAYER_SHUTTLES_STYLE =
+new ol.style.Style({
+    image: new ol.style.Icon({
+        src: MARKER_SHUTTLE_SRC,
+        tileSize: 256,
+        scale: 0.008
+    })
+});
+
 const MARKER_WARNING_SRC = 'assets/images/warning.png';
+const LAYER_WARNINGS_STYLE =
+new ol.style.Style({
+    image: new ol.style.Icon({
+        src: MARKER_WARNING_SRC,
+        tileSize: 256,
+        scale: 0.35
+    })
+});
+
 const MARKER_BREAK_SRC = 'assets/images/break.png';
+const LAYER_BREAKS_STYLE =
+new ol.style.Style({
+    image: new ol.style.Icon({
+        src: MARKER_BREAK_SRC,
+        tileSize: 256,
+        scale: 0.30
+    })
+});
+
+const MARKER_TRACK_COLOR = '#FF0000';
+const LAYER_TRACKS_STYLE =
+new ol.style.Style({
+    fill: new ol.style.Fill({ color: MARKER_TRACK_COLOR, weight: 4}),
+    stroke: new ol.style.Stroke({ color: MARKER_TRACK_COLOR, weight: 2})
+});
 
 
 function createMap(idTarget) {
     const olMap = createOlMap(idTarget);
-    const lyrStations = createStationsLayer();
-    const lyrShuttles = createShuttlesLayer();
-    const lyrTracks = createTracksLayer();
-    const lyrWarnings = createWarningsLayer();
-    const lyrBreaks = createBreaksLayer();
+    const lyrStations   = createVectorLayer(LAYER_STATIONS_STYLE);
+    const lyrShuttles   = createVectorLayer(LAYER_SHUTTLES_STYLE);
+    const lyrTracks     = createVectorLayer(LAYER_TRACKS_STYLE);
+    const lyrWarnings   = createVectorLayer(LAYER_WARNINGS_STYLE);
+    const lyrBreaks     = createVectorLayer(LAYER_BREAKS_STYLE);
     olMap.addLayer(lyrStations);
     olMap.addLayer(lyrShuttles);
     olMap.addLayer(lyrTracks);
@@ -58,65 +101,10 @@ function createVectorSource() {
     });
 }
 
-function createStationsLayer() {
+function createVectorLayer(style) {
     return new ol.layer.Vector({
         source: createVectorSource(),
-        style: new ol.style.Style({
-            image: new ol.style.Icon({
-                src: MARKER_STATION_SRC,
-                tileSize: 256,
-                scale: 0.008
-            })
-        }),
-    });
-}
-
-function createShuttlesLayer() {
-    return new ol.layer.Vector({
-        source: createVectorSource(),
-        style: new ol.style.Style({
-            image: new ol.style.Icon({
-                src: MARKER_SHUTTLE_SRC,
-                tileSize: 256,
-                scale: 0.008
-            })
-        }),
-    });
-}
-
-function createWarningsLayer() {
-    return new ol.layer.Vector({
-        source: createVectorSource(),
-        style: new ol.style.Style({
-            image: new ol.style.Icon({
-                src: MARKER_WARNING_SRC,
-                tileSize: 256,
-                scale: 0.35
-            })
-        }),
-    });
-}
-
-function createBreaksLayer() {
-    return new ol.layer.Vector({
-        source: createVectorSource(),
-        style: new ol.style.Style({
-            image: new ol.style.Icon({
-                src: MARKER_BREAK_SRC,
-                tileSize: 256,
-                scale: 0.25
-            })
-        }),
-    });
-}
-
-function createTracksLayer() {
-    return new ol.layer.Vector({
-        source: createVectorSource(),
-        style: new ol.style.Style({
-          fill: new ol.style.Fill({ color: MARKER_TRACK_COLOR, weight: 4}),
-          stroke: new ol.style.Stroke({ color: MARKER_TRACK_COLOR, weight: 2})
-        })
+        style: style,
     });
 }
 
