@@ -50,8 +50,7 @@ new ol.style.Style({
 const MARKER_TRACK_COLOR = '#FF0000';
 const LAYER_TRACKS_STYLE =
 new ol.style.Style({
-    fill: new ol.style.Fill({ color: MARKER_TRACK_COLOR, weight: 4}),
-    stroke: new ol.style.Stroke({ color: MARKER_TRACK_COLOR, weight: 2})
+    stroke: new ol.style.Stroke({ color: MARKER_TRACK_COLOR, width: 4})
 });
 
 
@@ -73,7 +72,14 @@ function createMap(idTarget) {
         "lyrShuttles": lyrShuttles,
         "lyrTracks": lyrTracks,
         "lyrWarnings": lyrWarnings,
-        "lyrBreaks": lyrBreaks
+        "lyrBreaks": lyrBreaks,
+        "entities": {
+            stations: [],
+            shuttles: [],
+            tracks: [],
+            warnings: [],
+            breaks: []
+        }
     };
 }
 
@@ -116,10 +122,9 @@ function drawStation(map, name, location) {
         )
     );
     map.lyrStations.getSource().addFeature(feature);
-    return {
-        "name": name,
-        "feature": feature
-    };
+    const entity = { name: name, feature: feature };
+    map.entities.stations.push(entity);
+    return entity;
 }
 
 function drawShuttle(map, name, location) {
@@ -129,16 +134,9 @@ function drawShuttle(map, name, location) {
         )
     );
     map.lyrShuttles.getSource().addFeature(feature);
-    return {
-        "name": name,
-        "feature": feature
-    };
-}
-
-function updateShuttle(shuttle, location) {
-    shuttle.feature.getGeometry().setCoordinates(
-        ol.proj.fromLonLat(location)
-    );
+    const entity = { name: name, feature: feature };
+    map.entities.shuttles.push(entity);
+    return entity;
 }
 
 function drawTrack(map, station1, station2) {
@@ -149,11 +147,9 @@ function drawTrack(map, station1, station2) {
         ])
     );
     map.lyrTracks.getSource().addFeature(feature);
-    return {
-        "station1": station1,
-        "station2": station2,
-        "feature": feature
-    };
+    const entity = {station1: station1, station2: station2, feature: feature};
+    map.entities.tracks.push(entity);
+    return entity;
 }
 
 function drawWarning(map, name, location) {
@@ -163,10 +159,9 @@ function drawWarning(map, name, location) {
         )
     );
     map.lyrWarnings.getSource().addFeature(feature);
-    return {
-        "name": name,
-        "feature": feature
-    };
+    const entity = { name: name, feature: feature };
+    map.entities.warnings.push(entity);
+    return entity;
 }
 
 function drawBreak(map, name, location) {
@@ -176,11 +171,21 @@ function drawBreak(map, name, location) {
         )
     );
     map.lyrBreaks.getSource().addFeature(feature);
-    return {
-        "name": name,
-        "feature": feature
-    };
+    const entity = { name: name, feature: feature };
+    map.entities.breaks.push(entity);
+    return entity;
 }
+
+
+function updateShuttle(shuttle, location) {
+    shuttle.feature.getGeometry().setCoordinates(
+        ol.proj.fromLonLat(location)
+    );
+}
+
+
+
+
 
 
 function fetchAndDrawStations(map, successHandler) {
