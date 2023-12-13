@@ -139,7 +139,7 @@ function drawShuttle(map, name, location) {
     return entity;
 }
 
-function drawTrack(map, station1, station2) {
+function drawTrack(map, station1, station2, name) {
     const feature = new ol.Feature(
         new ol.geom.LineString([
             station1.feature.getGeometry().getCoordinates(),
@@ -147,7 +147,7 @@ function drawTrack(map, station1, station2) {
         ])
     );
     map.lyrTracks.getSource().addFeature(feature);
-    const entity = {station1: station1, station2: station2, feature: feature};
+    const entity = {station1: station1, station2: station2, feature: feature, name: name};
     map.entities.tracks.push(entity);
     return entity;
 }
@@ -203,7 +203,7 @@ function fetchAndDrawTracks(map, entStations) {
         for (const track of tracks) {
             const entStation1 = entStations[track.station1.name];
             const entStation2 = entStations[track.station2.name];
-            drawTrack(map, entStation1, entStation2);
+            drawTrack(map, entStation1, entStation2, track.id);
         }
     });
 }

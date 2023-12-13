@@ -32,4 +32,8 @@ function createRoutePicker(map) {
     return routePicker;
 }
 
-export { createRoutePicker };
+function exportRouteSelection(map) {
+    return map.entities.tracks.filter(ent => ent.selected).map(ent => ent.name);
+}
+
+export { createRoutePicker, exportRouteSelection };

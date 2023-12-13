@@ -1,6 +1,6 @@
 "use strict";
 import { createMap, drawStation, drawShuttle, updateShuttle, drawTrack, drawWarning, drawBreak } from "../components/map.js";
-import { createRoutePicker } from "../components/routepicker.js";
+import { createRoutePicker, exportRouteSelection } from "../components/routepicker.js";
 
 document.addEventListener("DOMContentLoaded", init);
 function init() {
@@ -17,7 +17,7 @@ function init() {
     tracks.forEach(track => {
         const nameStation1 = track[0];
         const nameStation2 = track[1];
-        drawTrack(map, entStations[nameStation1], entStations[nameStation2]);
+        drawTrack(map, entStations[nameStation1], entStations[nameStation2], Math.random());
     });
 
     notices.forEach(notice => {
@@ -30,10 +30,14 @@ function init() {
         }
     });
 
-    const routePicker = createRoutePicker(map);
+    createRoutePicker(map);
+    document.querySelector("#btnselect").addEventListener("click", function() {
+        console.log(exportRouteSelection(map));
+    });
 
     setInterval(moveAndUpdate, 50);
 }
+
 
 function moveAndUpdate() {
     applyRandomMovement();
