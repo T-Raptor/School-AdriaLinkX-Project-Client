@@ -1,5 +1,5 @@
 "use strict";
-import { createMap, drawStation, drawShuttle, updateShuttle, drawTrack } from "../components/map.js";
+import { createMap, drawStation, drawShuttle, updateShuttle, drawTrack, drawWarning, drawBreak } from "../components/map.js";
 
 document.addEventListener("DOMContentLoaded", init);
 function init() {
@@ -19,6 +19,19 @@ function init() {
         drawTrack(map, entStations[nameStation1], entStations[nameStation2]);
     });
 
+    console.log("I S");
+    notices.forEach(notice => {
+        console.log("I S");
+        const name = notice.name;
+        const location = notice.location;
+        if (notice.type === "warning") {
+            drawWarning(map, name, location);
+            console.log("fc");
+        } else {
+            drawBreak(map, name, location);
+        }
+    });
+
     setInterval(moveAndUpdate, 50);
 }
 
@@ -26,6 +39,12 @@ function moveAndUpdate() {
     applyRandomMovement();
     updateShuttles();
 }
+
+
+const notices = [
+    {"name": 5, "location": [16.34878, 50.85045], "type": "warning"},
+    {"name": 6, "location": [30.3522, 48.8566], "type": "break"},
+];
 
 
 const stations = [
