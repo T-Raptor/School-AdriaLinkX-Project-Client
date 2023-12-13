@@ -1,5 +1,6 @@
 "use strict";
 import { createMap, drawStation, drawShuttle, updateShuttle, drawTrack, drawWarning, drawBreak } from "../components/map.js";
+import { createRoutePicker } from "../components/routepicker.js";
 
 document.addEventListener("DOMContentLoaded", init);
 function init() {
@@ -28,6 +29,8 @@ function init() {
             drawBreak(map, name, location);
         }
     });
+
+    const routePicker = createRoutePicker(map);
 
     setInterval(moveAndUpdate, 50);
 }
