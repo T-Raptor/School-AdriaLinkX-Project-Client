@@ -1,24 +1,66 @@
 "use strict";
 import { getStations, getTracks } from "../api.js";
 
+
 const MAP_TILES_URL = 'https://api.maptiler.com/maps/basic-v2/256/tiles.json?key=v7RhHG7ZxC29bKCh6207';
 const MAP_VIEW_CENTER = ol.proj.fromLonLat([4.34878, 50.85045]);
 const MAP_VIEW_ZOOM = 4;
 
+
 const MARKER_STATION_SRC = 'assets/images/generic_marker.png';
+const LAYER_STATIONS_STYLE =
+new ol.style.Style({
+    image: new ol.style.Icon({
+        src: MARKER_STATION_SRC,
+        tileSize: 256,
+        scale: 0.008
+    })
+});
+
 const MARKER_SHUTTLE_SRC = 'assets/images/green_marker.png';
-const MARKER_TRACK_COLOR = '#FF0000';
+const LAYER_SHUTTLES_STYLE =
+new ol.style.Style({
+    image: new ol.style.Icon({
+        src: MARKER_SHUTTLE_SRC,
+        tileSize: 256,
+        scale: 0.008
+    })
+});
+
 const MARKER_WARNING_SRC = 'assets/images/warning.png';
+const LAYER_WARNINGS_STYLE =
+new ol.style.Style({
+    image: new ol.style.Icon({
+        src: MARKER_WARNING_SRC,
+        tileSize: 256,
+        scale: 0.35
+    })
+});
+
 const MARKER_BREAK_SRC = 'assets/images/break.png';
+const LAYER_BREAKS_STYLE =
+new ol.style.Style({
+    image: new ol.style.Icon({
+        src: MARKER_BREAK_SRC,
+        tileSize: 256,
+        scale: 0.30
+    })
+});
+
+const MARKER_TRACK_COLOR = '#FF0000';
+const LAYER_TRACKS_STYLE =
+new ol.style.Style({
+    stroke: new ol.style.Stroke({ color: MARKER_TRACK_COLOR, width: 4})
+});
 
 
 function createMap(idTarget) {
     const olMap = createOlMap(idTarget);
-    const lyrStations = createStationsLayer();
-    const lyrShuttles = createShuttlesLayer();
-    const lyrTracks = createTracksLayer();
-    const lyrWarnings = createWarningsLayer();
-    const lyrBreaks = createBreaksLayer();
+    const lyrStations   = createVectorLayer(LAYER_STATIONS_STYLE);
+    const lyrShuttles   = createVectorLayer(LAYER_SHUTTLES_STYLE);
+    const lyrTracks     = createVectorLayer(LAYER_TRACKS_STYLE);
+    const lyrWarnings   = createVectorLayer(LAYER_WARNINGS_STYLE);
+    const lyrBreaks     = createVectorLayer(LAYER_BREAKS_STYLE);
     olMap.addLayer(lyrStations);
     olMap.addLayer(lyrShuttles);
     olMap.addLayer(lyrTracks);
@@ -30,7 +72,14 @@ function createMap(idTarget) {
         "lyrShuttles": lyrShuttles,
         "lyrTracks": lyrTracks,
         "lyrWarnings": lyrWarnings,
-        "lyrBreaks": lyrBreaks
+        "lyrBreaks": lyrBreaks,
+        "entities": {
+            stations: [],
+            shuttles: [],
+            tracks: [],
+            warnings: [],
+            breaks: []
+        }
     };
 }
 
@@ -58,65 +107,10 @@ function createVectorSource() {
     });
 }
 
-function createStationsLayer() {
+function createVectorLayer(style) {
     return new ol.layer.Vector({
         source: createVectorSource(),
-        style: new ol.style.Style({
-            image: new ol.style.Icon({
-                src: MARKER_STATION_SRC,
-                tileSize: 256,
-                scale: 0.008
-            })
-        }),
-    });
-}
-
-function createShuttlesLayer() {
-    return new ol.layer.Vector({
-        source: createVectorSource(),
-        style: new ol.style.Style({
-            image: new ol.style.Icon({
-                src: MARKER_SHUTTLE_SRC,
-                tileSize: 256,
-                scale: 0.008
-            })
-        }),
-    });
-}
-
-function createWarningsLayer() {
-    return new ol.layer.Vector({
-        source: createVectorSource(),
-        style: new ol.style.Style({
-            image: new ol.style.Icon({
-                src: MARKER_WARNING_SRC,
-                tileSize: 256,
-                scale: 0.35
-            })
-        }),
-    });
-}
-
-function createBreaksLayer() {
-    return new ol.layer.Vector({
-        source: createVectorSource(),
-        style: new ol.style.Style({
-            image: new ol.style.Icon({
-                src: MARKER_BREAK_SRC,
-                tileSize: 256,
-                scale: 0.25
-            })
-        }),
-    });
-}
-
-function createTracksLayer() {
-    return new ol.layer.Vector({
-        source: createVectorSource(),
-        style: new ol.style.Style({
-          fill: new ol.style.Fill({ color: MARKER_TRACK_COLOR, weight: 4}),
-          stroke: new ol.style.Stroke({ color: MARKER_TRACK_COLOR, weight: 2})
-        })
+        style: style,
     });
 }
 
@@ -128,10 +122,9 @@ function drawStation(map, name, location) {
         )
     );
     map.lyrStations.getSource().addFeature(feature);
-    return {
-        "name": name,
-        "feature": feature
-    };
+    const entity = { name: name, feature: feature };
+    map.entities.stations.push(entity);
+    return entity;
 }
 
 function drawShuttle(map, name, location) {
@@ -141,16 +134,9 @@ function drawShuttle(map, name, location) {
         )
     );
     map.lyrShuttles.getSource().addFeature(feature);
-    return {
-        "name": name,
-        "feature": feature
-    };
-}
-
-function updateShuttle(shuttle, location) {
-    shuttle.feature.getGeometry().setCoordinates(
-        ol.proj.fromLonLat(location)
-    );
+    const entity = { name: name, feature: feature };
+    map.entities.shuttles.push(entity);
+    return entity;
 }
 
 function drawTrack(map, station1, station2) {
@@ -161,11 +147,9 @@ function drawTrack(map, station1, station2) {
         ])
     );
     map.lyrTracks.getSource().addFeature(feature);
-    return {
-        "station1": station1,
-        "station2": station2,
-        "feature": feature
-    };
+    const entity = {station1: station1, station2: station2, feature: feature};
+    map.entities.tracks.push(entity);
+    return entity;
 }
 
 function drawWarning(map, name, location) {
@@ -175,10 +159,9 @@ function drawWarning(map, name, location) {
         )
     );
     map.lyrWarnings.getSource().addFeature(feature);
-    return {
-        "name": name,
-        "feature": feature
-    };
+    const entity = { name: name, feature: feature };
+    map.entities.warnings.push(entity);
+    return entity;
 }
 
 function drawBreak(map, name, location) {
@@ -188,11 +171,21 @@ function drawBreak(map, name, location) {
         )
     );
     map.lyrBreaks.getSource().addFeature(feature);
-    return {
-        "name": name,
-        "feature": feature
-    };
+    const entity = { name: name, feature: feature };
+    map.entities.breaks.push(entity);
+    return entity;
 }
+
+
+function updateShuttle(shuttle, location) {
+    shuttle.feature.getGeometry().setCoordinates(
+        ol.proj.fromLonLat(location)
+    );
+}
+
+
+
+
 
 
 function fetchAndDrawStations(map, successHandler) {
