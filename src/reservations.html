@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservations</title>
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/pages/reservations.css">
+    <script src="https://cdn.jsdelivr.net/npm/ol@v7.1.0/dist/ol.js"></script>
+    <script src="assets/js/pages/reservations.js" type="module"></script>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <img src="assets/media/horizontal-menu-circle.svg" alt="Menu icon">
+            <div id="context-menu-content">
+                <a href="monitor.html">Monitoring</a>
+                <a href="#">Warnings</a>
+                <a href="#">Settings</a>
+            </div>
+        </nav>
+        <h1>Reservations</h1>
+    </header>
+    <main>
+        <div id="top" class="grid-container">
+            <div id="timedate">
+                <p id="time">xx:xx</p>
+                <p id="date">xx/xx/xxxx</p>
+            </div>
+        </div>
+        <div id="content" class="grid-container">
+            <section class="sidebar clickables">
+                <h2 id="company-name">[COMPANY]</h2>
+                <hr>
+                <ul id="reservations"></ul>
+            </section>
+            <div id="centra-map"></div>
+        </div>
+    </main>
+
+    <hr>
+    <a href="index.html"> Go to monitor</a>
+</body>
+
+</html>

@@ -16,7 +16,7 @@
         <nav>
             <img src="assets/media/horizontal-menu-circle.svg" alt="Menu icon">
             <div id="context-menu-content">
-                <a href="#">Shuttles</a>
+                <a href="reservations.html">Reservations</a>
                 <a href="#">Warnings</a>
                 <a href="#">Settings</a>
             </div>
@@ -30,7 +30,9 @@
                 <p id="date">xx/xx/xxxx</p>
             </div>
             <div id="timeline">
-                <a href="#" id="timeline-bar"></a>
+                <a href="#" id="timeline-bar">
+                    <img src="assets/media/subtract-1.svg" alt="Timeline bar">
+                </a>
                 <div id="timeline-line"></div>
                 <div id="timeline-text">
                     <p>20xx</p>
@@ -43,13 +45,13 @@
             </div>
         </div>
         <div id="content" class="grid-container">
-            <section class="sidebar">
+            <section class="sidebar clickables">
                 <h2>Shuttles</h2>
                 <hr>
                 <ul id="shuttles"></ul>
             </section>
             <div id="centra-map"></div>
-            <section class="sidebar">
+            <section class="sidebar warnings">
                 <h2>Warnings</h2>
                 <hr>
                 <ul id="notices"></ul>
@@ -57,9 +59,8 @@
         </div>
     </main>
 
-    <a href="index.html"
-        style="text-decoration: none; line-height: 2rem; color: white; padding: 0.2rem; background-color: black;">Go to
-        monitor</a>
+    <hr>
+    <a href="index.html">Go to monitor</a>
 </body>
 
 </html>
