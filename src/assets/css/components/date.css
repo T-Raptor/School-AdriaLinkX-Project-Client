@@ -1,25 +1,6 @@
-
-body {
+.calendar {
     font-family: Arial, sans-serif;
     font-size: 20px;
-}
-
-#centra-map {
-    width: 500px;
-    height: 500px;
-}
-
-form{
-    display: inline;
-}
-
-.calendarTime {
-    float: right;
-    margin-right: 100px;
-
-}
-
-.calendar {
     width: 450px; /* Increased width */
     /*margin: 20px 100px;*/
     border: 2px solid #ccc; /* Increased border size */
@@ -30,7 +11,7 @@ form{
 
 }
 
-.calendar-header {
+.calendar .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -38,12 +19,12 @@ form{
     padding: 15px; /* Increased padding */
 }
 
-#currentMonthYear {
+.calendar .current {
     margin: 0;
     font-size: 20px; /* Increased font size */
 }
 
-button {
+.calendar button {
     background-color: #4caf50;
     color: white;
     border: none;
@@ -53,18 +34,18 @@ button {
     font-size: 16px; /* Increased font size */
 }
 
-button:hover {
+.calendar button:hover {
     background-color: #45a049;
 }
 
-.calendar-body {
+.calendar .body {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 10px; /* Increased gap */
     padding: 15px; /* Increased padding */
 }
 
-.day {
+.calendar .day {
     text-align: center;
     padding: 10px; /* Increased padding */
     border: 2px solid #ddd; /* Increased border size */
@@ -72,42 +53,6 @@ button:hover {
     font-size: 16px; /* Increased font size */
 }
 
-.day:hover {
+.calendar .day:hover {
     background-color: #ddd;
 }
-
-label {
-    margin-right: 50px;
-    font-size: 20px;
-    display: block;
-    margin-top: 25px;
-
-}
-
-#selectedDate{
-    font-size: 20px;
-}
-
-#reserve {
-    margin-top: 25px;
-
-}
-select{
-    font-size: 20px;
-}
-
-#submitForm{
-    margin-top: 25px;
-    margin-left: 50px;
-    font-size: 20px;
-}
-#timeing{
-    font-size: 20px;
-
-}
-.timeing{
-    font-size: 20px;
-    margin-top: 25px;
-}
-
-
