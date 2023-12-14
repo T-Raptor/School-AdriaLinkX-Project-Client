@@ -39,4 +39,13 @@ function renderTimeSlots(timepicker, blockedSlots) {
     }
 }
 
-export { createTimePicker };
+
+function exportTimeSelection(timepicker) {
+    return {
+        start: Math.min(...timepicker.selected),
+        stop: Math.max(...timepicker.selected) + 1
+    };
+}
+
+
+export { createTimePicker, exportTimeSelection };
