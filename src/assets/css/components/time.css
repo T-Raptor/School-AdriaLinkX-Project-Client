@@ -15,3 +15,7 @@
     background-color: lightgray;
     height: 2rem;
 }
+
+.timepicker .slot.selected {
+    background-color: aquamarine;
+}
