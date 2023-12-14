@@ -93,4 +93,9 @@ function renderCalendar(calendar) {
 }
 
 
-export { createCalendar };
+function exportDateSelection(calendar) {
+    return {year: calendar.year, month: calendar.month + 1, day: calendar.day};
+}
+
+
+export { createCalendar, exportDateSelection };
