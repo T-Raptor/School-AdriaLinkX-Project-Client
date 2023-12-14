@@ -1,5 +1,5 @@
 "use strict";
-import { renderCalendar, nextMonthBtn, prevMonthBtn } from "../components/date.js";
+import { createCalendar } from "../components/date.js";
 import { createMap, fetchAndDrawStationsAndTracks } from "../components/map.js";
 
 
@@ -16,9 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let timeCounter = 1;
     let additionalTime = null;
 
-    renderCalendar();
-    nextMonthBtn;
-    prevMonthBtn;
+    createCalendar(".calendar");
 
 
     updateDetails();

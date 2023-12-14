@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,61 +9,54 @@
   <script src="https://cdn.jsdelivr.net/npm/ol@v7.1.0/dist/ol.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.1.0/ol.css">
   <link rel="stylesheet" href="assets/css/reset.css">
+  <link rel="stylesheet" href="assets/css/components/date.css">
   <link rel="stylesheet" href="assets/css/pages/reserve.css">
   <script src="assets/js/pages/reserve.js" type="module"></script>
 </head>
+
 <body>
-<div id="centra-map"></div>
+  <div id="centra-map"></div>
 
-<form id="reservationForm">
+  <form id="reservationForm">
 
-<div class="calendarTime">
+    <div class="calendarTime">
+      <div class="calendar">
+        <div class="header">
+          <button class="previous">&#9665;</button>
+          <div class="current"></div>
+          <button class="next">&#9655;</button>
+        </div>
+        <div class="body"></div>
+      </div>
 
-  <div class="calendar">
-  <div class="calendar-header">
-    <button id="prevMonth">&#9665;</button>
-    <div id="currentMonthYear"></div>
-    <button id="nextMonth">&#9655;</button>
-  </div>
-  <div class="calendar-body" id="calendarBody"></div>
-</div>
-  <div class="labels">
-    <label for="selectedDate">Select Date:</label>
-    <input type="text" id="selectedDate" readonly>
-<!--    <label for="timeing">Select Time</label>-->
-<!--    <input type="time" id="timeing">-->
+      <div class="labels">
+        <label for="selectedDate">Select Date:</label>
+        <input type="text" id="selectedDate" readonly>
 
-    <label for="timeing">Select Time</label>
-    <input type="text" id="timeing" name="timeing">
+        <label for="timeing">Select Time</label>
+        <input type="text" id="timeing" name="timeing">
 
-    <div id="additionalTimes"></div>
+        <div id="additionalTimes"></div>
 
-    <button type="button" id="addTime">+</button>
+        <button type="button" id="addTime">+</button>
 
-    <label for="routes"> Select Routes</label>
-    <select id="routes" name="routes">
-      <option value="route1">Adrial A</option>
-      <option value="route2">Adrial B</option>
-      <option value="route3">Adrial C</option>
-<!--      <option value="route4">Adrial A</option>-->
-    </select>
-    <p id="routeDescription"></p>
+        <label for="routes"> Select Routes</label>
+        <select id="routes" name="routes">
+          <option value="route1">Adrial A</option>
+          <option value="route2">Adrial B</option>
+          <option value="route3">Adrial C</option>
+        </select>
+        <p id="routeDescription"></p>
+      </div>
 
-  </div>
+      <button type="button" id="submitForm">Checkout</button>
+    </div>
+  </form>
 
-  <button type="button" id="submitForm">Checkout</button>
-</div>
-
-</form>
-
-<p id="reservationDetails" style="display: none;"></p>
+  <p id="reservationDetails" style="display: none;"></p>
 
 
 
 </body>
+
 </html>
-
-
-
-
-
