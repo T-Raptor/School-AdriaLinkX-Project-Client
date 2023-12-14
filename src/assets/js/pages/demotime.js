@@ -1,2 +1,2 @@
 import { createTimePicker } from "../components/time.js";
-createTimePicker(".timepicker");
+createTimePicker(".timepicker", [7, 8, 9]);
