@@ -20,8 +20,28 @@ function createCalendar(selector) {
         goToNextMonth(calendar);
     });
 
+    const body = target.querySelector(".body");
+    body.addEventListener("click", function(e) {
+        if (e.target.classList.contains("day")
+        && e.target.innerHTML
+        && !isNaN(+e.target.innerHTML)) {
+            setSelectedDay(calendar, e.target);
+        }
+    });
+
     renderCalendar(calendar);
     return calendar;
+}
+
+
+function setSelectedDay(calendar, elmDay) {
+    if (calendar.elmDay) {
+        calendar.elmDay.classList.remove("selected");
+    }
+    const day = +elmDay.innerHTML;
+    calendar.day = day;
+    calendar.elmDay = elmDay;
+    elmDay.classList.add("selected");
 }
 
 

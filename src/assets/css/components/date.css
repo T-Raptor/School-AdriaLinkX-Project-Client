@@ -56,3 +56,7 @@
 .calendar .day:hover {
     background-color: #ddd;
 }
+
+.calendar .day.selected {
+    background-color: aquamarine;
+}
