@@ -14,4 +14,4 @@ function renderTimeSlots(timepicker) {
     }
 }
 
-export { createTimePicker }
+export { createTimePicker };
