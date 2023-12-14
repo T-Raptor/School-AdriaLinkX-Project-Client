@@ -19,3 +19,7 @@
 .timepicker .slot.selected {
     background-color: aquamarine;
 }
+
+.timepicker .slot.blocked {
+    background-color: red;
+}

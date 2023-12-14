@@ -1,11 +1,11 @@
-function createTimePicker(selector) {
+function createTimePicker(selector, blockedSlots) {
     const target = document.querySelector(selector);
     const timepicker = { target, selected: [] };
-    renderTimeSlots(timepicker);
+    renderTimeSlots(timepicker, blockedSlots);
 
     target.addEventListener("click", function (e) {
         const elm = e.target;
-        if (elm.classList.contains("slot")) {
+        if (elm.classList.contains("slot") && !elm.classList.contains("blocked")) {
             const hour = +elm.innerHTML;
             if (timepicker.selected.includes(hour)
                 && (!timepicker.selected.includes(hour - 1)
@@ -26,12 +26,16 @@ function createTimePicker(selector) {
     return timepicker;
 }
 
-function renderTimeSlots(timepicker) {
+function renderTimeSlots(timepicker, blockedSlots) {
     const $content = timepicker.target.querySelector(".content");
     $content.innerHTML = "";
     for (let i = 0; i < 24; i++) {
         const strI = i < 10 ? "0" + i : "" + i;
-        $content.innerHTML += `<li class='slot'>${strI}</li>`;
+        if (blockedSlots.includes(i)) {
+            $content.innerHTML += `<li class='slot blocked'>${strI}</li>`;
+        } else {
+            $content.innerHTML += `<li class='slot'>${strI}</li>`;
+        }
     }
 }
 
