@@ -1,1 +1,2 @@
-import {} from "../components/time.js";
+import { createTimePicker } from "../components/time.js";
+createTimePicker(".timepicker");
