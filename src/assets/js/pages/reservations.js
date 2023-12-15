@@ -11,7 +11,7 @@ function init() {
     displayCompanyName();
     displayReservations();
 
-    document.querySelector("#top").addEventListener("click", getReservations);
+    getReservations();
 }
 
 
