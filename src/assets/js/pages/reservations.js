@@ -10,12 +10,10 @@ function init() {
     fetchAndDrawStationsAndTracks(map);
     displayCompanyName();
     displayReservations();
-
-    getReservations();
 }
 
 
-const reservations = [
+const tempReservations = [
     {
         id: 274,
         date: "22/11/2023",
@@ -63,7 +61,7 @@ function displayReservations() {
     }
 
     for (let i = 0; i < 2; i++) {
-        const random = reservations[Math.floor(Math.random() * reservations.length)];
+        const random = tempReservations[Math.floor(Math.random() * tempReservations.length)];
         reservationsList.insertAdjacentHTML("beforeend", `<ul data-id="${random.id}">
     <li>#${random.id}</li>
     <li>${random.date}</li>
@@ -73,19 +71,8 @@ function displayReservations() {
     }
 }
 
-function displayCompanyName() {
-    const companyName = document.querySelector("#company-name");
-    const company = { name: "TempComp" };
+function setCompanyName(companyName) {
+    const companyNameText = document.querySelector("#company-name");
 
-    if (JSON.parse(localStorage.getItem("company"))) {
-        const company = JSON.parse(localStorage.getItem("company"));
-
-        companyName.textContent = company.name;
-    }
-
-    companyName.textContent = company.name;
-}
-
-function tempGetLocalStorageReservation() {
-    return localStorage.getItem("reservation");
+    companyNameText.textContent = companyName;
 }
