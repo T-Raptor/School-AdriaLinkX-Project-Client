@@ -11,6 +11,10 @@ function getTracks(successHandler) {
     return get("tracks", rsp => rsp.json().then(successHandler));
 }
 
+function getReservations(successHandler) {
+    return get("reservations", rsp => rsp.json().then(successHandler));
+}
+
 
 function get(uri, successHandler = logJson, failureHandler = logError) {
     if (api === null) {
@@ -97,4 +101,4 @@ function call(request, successHandler, errorHandler) {
 }
 
 
-export { getStations, getTracks };
+export { getStations, getTracks, getReservations };

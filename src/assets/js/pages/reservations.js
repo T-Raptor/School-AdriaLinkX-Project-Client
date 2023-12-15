@@ -1,5 +1,6 @@
 "use strict";
 import { createMap, fetchAndDrawStationsAndTracks } from "../components/map.js";
+import { getReservations } from "../api.js";
 
 
 document.addEventListener("DOMContentLoaded", init);
@@ -9,6 +10,8 @@ function init() {
     fetchAndDrawStationsAndTracks(map);
     displayCompanyName();
     displayReservations();
+
+    document.querySelector("#top").addEventListener("click", getReservations);
 }
 
 
