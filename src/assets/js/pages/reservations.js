@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", init);
 function init() {
     const map = createMap("centra-map");
     fetchAndDrawStationsAndTracks(map);
+    displayCompanyName("Hoogle");
     displayReservations();
 }
 
@@ -21,9 +22,6 @@ function displayReservations() {
                 start_time: formatTime(reservation.periodStart),
                 timeframe: formatTime(reservation.periodStop - reservation.periodStart)
             };
-
-            console.log(reservation);
-            console.log(currentReservation);
             displayReservationItems(currentReservation);
         });
     });
@@ -31,13 +29,11 @@ function displayReservations() {
 
 function displayCompanyName(companyName) {
     const companyNameText = document.querySelector("#company-name");
-
     companyNameText.textContent = companyName;
 }
 
 function displayReservationItems(reservation) {
     const reservationsHTMLList = document.querySelector("#reservations");
-
     reservationsHTMLList.insertAdjacentHTML("beforeend",
         `<ul data-id="${reservation.id}">
             <li>#${reservation.id}</li>
