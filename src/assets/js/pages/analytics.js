@@ -41,7 +41,16 @@ async function fetchData() {
 
                 const distance = earthRadius * c;
 
+                const startTimestamp = new Date(entry.periodStart).getTime();
+                const stopTimestamp = new Date(entry.periodStop).getTime();
+
+
+                const durationMs = stopTimestamp - startTimestamp;
+
                 
+                const durationHours = durationMs / (1000 * 60 * 60);
+
+                console.log(durationHours)
 
                 console.log(distance)
                // console.log(date.getFullYear(),date.getMonth() + 1)
