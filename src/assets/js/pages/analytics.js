@@ -1,4 +1,13 @@
+function toRadians(degrees) {
+    return degrees * (Math.PI / 180);
+}
+
+const hoursDay = 24;
+const daysMonth = 30;
+
 async function fetchData() {
+
+
     try {
         const response = await fetch("http://localhost:8080/api/reservations");
         const data = await response.json();
@@ -6,18 +15,42 @@ async function fetchData() {
         const monthlyReservations = {};
 
         data.forEach(entry => {
-            const routes = entry.route || [];
+            routes = entry.route || [];
 
-            console.log(routes)
+
             routes.forEach(route => {
-                const periodStart = new Date(entry.periodStart);
-                const monthKey = `${periodStart.getFullYear()}-${periodStart.getMonth() + 1}`;
+                const date = new Date(entry.periodStart);
+                const monthKey = `${date.getFullYear()}-${date.getMonth() + 1}`;
 
+                const radLat1 = toRadians(route.station1.latitude);
+                const radLon1 = toRadians(route.station1.longitude);
+
+                const radLat2 = toRadians(route.station2.latitude);
+                const radLon2 = toRadians(route.station2.longitude);
+
+                const deltaLat = radLat2 - radLat1;
+                const deltaLon = radLon2 - radLon1;
+
+                const a =
+                    Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+                    Math.cos(radLat1) * Math.cos(radLat2) * Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
+
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+                const earthRadius = 6371; // Radius of the Earth in kilometers
+
+                const distance = earthRadius * c;
+
+                
+
+                console.log(distance)
+               // console.log(date.getFullYear(),date.getMonth() + 1)
                 if (!monthlyReservations[monthKey]) {
                     monthlyReservations[monthKey] = 0;
                 }
 
                 monthlyReservations[monthKey] += (route.station1 ? 1 : 0) + (route.station2 ? 1 : 0);
+                console.log(monthlyReservations)
             });
         });
 
@@ -69,3 +102,10 @@ async function fetchData() {
 }
 
 fetchData();
+
+
+
+
+
+
+
