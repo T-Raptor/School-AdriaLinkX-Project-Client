@@ -19,8 +19,12 @@ async function fetchData() {
 
 
             routes.forEach(route => {
-                const date = new Date(entry.periodStart);
-                const monthKey = `${date.getFullYear()}-${date.getMonth() + 1}`;
+
+                const startDate = new Date(entry.periodStart);
+                const endDate = new Date(entry.periodStop)
+
+
+                const monthKey = `${startDate.getFullYear()}-${startDate.getMonth() + 1}`;
 
                 const radLat1 = toRadians(route.station1.latitude);
                 const radLon1 = toRadians(route.station1.longitude);
@@ -41,19 +45,28 @@ async function fetchData() {
 
                 const distance = earthRadius * c;
 
-                const startTimestamp = new Date(entry.periodStart).getTime();
-                const stopTimestamp = new Date(entry.periodStop).getTime();
+                const startTimestamp = new Date(startDate).getTime();
+                const stopTimestamp = new Date(endDate).getTime();
 
 
                 const durationMs = stopTimestamp - startTimestamp;
 
-                
+
                 const durationHours = durationMs / (1000 * 60 * 60);
 
-                console.log(durationHours)
+             
 
-                console.log(distance)
-               // console.log(date.getFullYear(),date.getMonth() + 1)
+                const reservedTime = distance * durationHours ;
+                const availableTime = hoursDay * daysMonth * distance;
+
+
+
+                const cal  = reservedTime /availableTime * 100 ;
+
+                console.log(cal)
+
+
+
                 if (!monthlyReservations[monthKey]) {
                     monthlyReservations[monthKey] = 0;
                 }
