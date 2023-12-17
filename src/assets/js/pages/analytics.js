@@ -3,39 +3,69 @@ async function fetchData() {
         const response = await fetch("http://localhost:8080/api/reservations");
         const data = await response.json();
 
-        const companyReservations = data.reduce((acc, entry) => {
-            const company = entry.company;
-            const reservationCount = entry.route ? entry.route.length : 0;
+        const monthlyReservations = {};
 
-            if (!acc[company]) {
-                acc[company] = 0;
-            }
+        data.forEach(entry => {
+            const routes = entry.route || [];
 
-            acc[company] += reservationCount;
-            return acc;
-        }, {});
+            console.log(routes)
+            routes.forEach(route => {
+                const periodStart = new Date(entry.periodStart);
+                const monthKey = `${periodStart.getFullYear()}-${periodStart.getMonth() + 1}`;
 
-        const ctx = document.getElementById('doughnut-chart').getContext('2d');
-        const doughnutChart = new Chart(ctx, {
-            type: 'doughnut',
+                if (!monthlyReservations[monthKey]) {
+                    monthlyReservations[monthKey] = 0;
+                }
+
+                monthlyReservations[monthKey] += (route.station1 ? 1 : 0) + (route.station2 ? 1 : 0);
+            });
+        });
+
+        const labels = Object.keys(monthlyReservations);
+        const dataValues = Object.values(monthlyReservations);
+
+        const ctx = document.getElementById('bar-chart').getContext('2d');
+        const barChart = new Chart(ctx, {
+            type: 'bar',
             data: {
-                labels: Object.keys(companyReservations),
+                labels : labels,
                 datasets: [{
-                    data: Object.values(companyReservations),
-                    backgroundColor: [
-                        'rgba(206,50,233,0.7)',
-                        'rgba(54, 162, 235, 0.7)',
-                        'rgba(255, 99, 132, 0.7)',
-                        'rgba(104,255,99,0.7)',
-                        'rgba(255,229,99,0.7)',
-                    ],
+                    label: 'Reservations/Month',
+                    data: dataValues,
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
                 }],
             },
+            options : {
+                labels : {
+                    font : {
+                        size : 20
+                    }
+                },
+                    scales : {
+                        x : {
+                            title : {
+                                display : true,
+                                font: {
+                                    size : 20
+                                }
+                            }
+                        },
+                        y : {
+                            title : {
+                                display: true,
+                                text : "Reservations (%)",
+                                font : {
+                                    size : 20
+                                }
+                            },
+                            max: 100
+                        }
+                    }
+            }
         });
     } catch (error) {
         console.error("Error fetching data:", error);
     }
 }
-
 
 fetchData();
