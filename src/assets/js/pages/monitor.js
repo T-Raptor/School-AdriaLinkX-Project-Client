@@ -114,7 +114,7 @@ function drawAndUpdateNotices(map, entities, eventType) {
                 const entity = getEntity(map, eventType === "BREAK" ? "breaks" : "warnings", notice.id);
 
                 if (entity === null) {
-                    const trackLongLat = await getLonLatFromTrackId(notice.target.id);
+                    const trackLongLat = await calculateMiddleTrack(notice.target.id);
 
                     if (eventType === "BREAK") {
                         drawBreak(map, notice.id, [trackLongLat.long, trackLongLat.lat]);
@@ -134,20 +134,36 @@ function fetchAndRenderNotices(map) {
     fetchAndRenderEntities(map, "WARN", drawAndUpdateNotices, "notices");
 }
 
-function getLonLatFromTrackId(trackId) {
+function calculateMiddleTrack(trackId) {
     return new Promise((resolve, reject) => {
         getTracks((tracks) => {
             const foundTrack = tracks.find((track) => track.id === trackId);
 
             if (foundTrack) {
-                const longLat = {
+                const longLat1 = {
                     lat: foundTrack.station1.latitude,
                     long: foundTrack.station1.longitude
                 };
-                resolve(longLat);
+
+                const longLat2 = {
+                    lat: foundTrack.station2.latitude,
+                    long: foundTrack.station2.longitude
+                };
+
+                const midpoint = calculateMidpoint(longLat1.lat, longLat1.long, longLat2.lat, longLat2.long);
+
+                resolve(midpoint);
             } else {
                 reject(new Error(`Track with ID ${trackId} not found`));
             }
         });
     });
+}
+
+// Calculate middle of track
+function calculateMidpoint(lat1, lon1, lat2, lon2) {
+    const resLat = (lat1 + lat2) / 2;
+    const resLong = (lon1 + lon2) / 2;
+
+    return { lat: resLat, long: resLong };
 }
