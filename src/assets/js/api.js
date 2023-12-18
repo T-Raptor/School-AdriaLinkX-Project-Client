@@ -24,6 +24,16 @@ function getEvents(successHandler, queryParams) {
     return get(`events${queryString}`, rsp => rsp.json().then(successHandler));
 }
 
+function placeReservation(route, periodStart, periodStop, company, successHandler) {
+    return post("reservations", {
+        route,
+        periodStart,
+        periodStop,
+        company
+    }, successHandler);
+}
+
+
 function get(uri, successHandler = logJson, failureHandler = logError) {
     if (api === null) {
         loadConfig(a => {
@@ -109,4 +119,5 @@ function call(request, successHandler, errorHandler) {
 }
 
 
-export { getStations, getTracks, getReservations, getEvents };
+export { getStations, getTracks, getReservations, getEvents, placeReservation };
+export { getStations, getTracks, getReservations, getEventsWith, placeReservation };
