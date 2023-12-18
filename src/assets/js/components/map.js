@@ -212,6 +212,16 @@ function fetchAndDrawStationsAndTracks(map) {
     fetchAndDrawStations(map, fetchAndDrawTracks);
 }
 
+function getEntity(map, type, name) {
+    const entities = map.entities[type];
+    for (const entity of entities) {
+        if (entity.name === name) {
+            return entity;
+        }
+    }
+    return null;
+}
 
 
-export {createMap, drawStation, drawShuttle, updateShuttle, drawTrack, fetchAndDrawStationsAndTracks, drawWarning, drawBreak};
+
+export {createMap, drawStation, drawShuttle, updateShuttle, drawTrack, fetchAndDrawStationsAndTracks, drawWarning, drawBreak, getEntity};
