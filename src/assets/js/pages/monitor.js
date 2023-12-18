@@ -5,12 +5,34 @@ import { getEventsWith } from "../api.js";
 
 document.addEventListener("DOMContentLoaded", init);
 
+function getLastMoveForId(events, id) {
+    let move = null;
+    for (const event of events) {
+        if (event.subject === "MOVE" && event.target.id === id) {
+            move = event;
+        }
+    }
+    return move;
+}
+
+function getUniqueIds(events) {
+    const ids = new Set();
+    for (const event of events) {
+        if (event.subject === "MOVE") {
+            ids.add(event.target.id);
+        }
+    }
+    return ids;
+}
+
 function init() {
     const map = createMap("centra-map");
     fetchAndDrawStationsAndTracks(map);
     getEventsWith("?subject=MOVE", function(events) {
-        for (const event of events) {
-            drawShuttle(map, event.target.serial, [event.latitude, event.longitude]);
+        const ids = getUniqueIds(events);
+        for (const id of ids) {
+            const move = getLastMoveForId(events, id);
+            drawShuttle(map, move.target.id, [move.latitude, move.longitude]);
         }
     });
     displayWarnings();
