@@ -82,7 +82,7 @@ function createMonthlyReservationGraph(labels, dataValues) {
     });
 }
 
-function fetchData() {
+function fetchAndDrawReservationCoverage() {
     getReservations((reservations) => {
         const coverage = getMonthlyReservationCoverage(reservations);
         const labels = Object.keys(coverage);
@@ -90,13 +90,6 @@ function fetchData() {
         createMonthlyReservationGraph(labels, dataValues);
     });
 }
-
-document.addEventListener("DOMContentLoaded", function () {
-    fetchData();
-    countIncidentsForAllMonths((sums) => console.log(sums));
-});
-
-
 
 
 
@@ -133,3 +126,38 @@ function countIncidentsForAllMonths(successHandler) {
         successHandler(sums);
     });
 }
+
+function createBarChart(data) {
+    const labels = Array.from({ length: 12 }, (_, i) => `${i + 1}`);
+    const ctx = document.getElementById('events-chart').getContext('2d');
+
+    return new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Incidents/Month',
+                data: data,
+                backgroundColor: 'rgba(255, 99, 132, 0.7)',
+            }],
+        },
+        options: {
+            scales: {
+                x: { title: { display: true, text: 'Month', font: { size: 16 } } },
+                y: { title: { display: true, text: 'Number of Incidents', font: { size: 16 } }, max :100, }
+            }
+        }
+    });
+}
+
+function fetchAndDrawMonthlyIncidents() {
+    countIncidentsForAllMonths(function (sums) {
+        createBarChart(sums);
+    });
+}
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    fetchAndDrawMonthlyIncidents();
+    fetchAndDrawReservationCoverage();
+});

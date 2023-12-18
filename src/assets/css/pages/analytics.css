@@ -1,4 +1,14 @@
+body{
+    display: flex;
+}
+
 .container {
+    width: 600px;
+    margin: auto;
+    padding: 10px;
+}
+
+.secondChart{
     width: 600px;
     margin: auto;
     padding: 10px;
