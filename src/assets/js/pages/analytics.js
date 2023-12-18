@@ -1,3 +1,5 @@
+import { getEventsWith } from "../api.js";
+
 function toRadians(degrees) {
     return degrees * (Math.PI / 180);
 }
@@ -118,7 +120,40 @@ fetchData();
 
 
 
+function getIncidents(successHandler) {
+    getEventsWith("", function(events) {
+        const filtered = events.filter(e => e.subject === "WARN" || e.subject === "BREAK");
+        successHandler(filtered);
+    });
+}
 
+function countIncidentsForPeriod(incidents, periodStart, periodStop) {
+    let sumIncidents = 0;
+    for (const incident of incidents) {
+        const moment = incident.moment;
+        if(periodStart <= moment && periodStop >= moment) {
+            sumIncidents++;
+        }
+    }
+    return sumIncidents;
+}
 
+function countIncidentsForMonth(incidents, year, month) {
+    const periodStart = new Date(year, month, 1);
+    const periodStop = new Date(year, month+1, 0);
+    return countIncidentsForPeriod(incidents, periodStart, periodStop);
+}
+
+function countIncidentsForAllMonths(successHandler) {
+    getIncidents(function(incidents) {
+        const sums = [];
+        for (let i = 0; i < 12; i++) {
+            sums.push(countIncidentsForMonth(incidents, 2022, i));
+        }
+        successHandler(sums);
+    });
+}
+
+countIncidentsForAllMonths((sums) => console.log(sums));
 
 
