@@ -154,6 +154,56 @@ function countIncidentsForAllMonths(successHandler) {
     });
 }
 
-countIncidentsForAllMonths((sums) => console.log(sums));
+function createBarChart(data) {
+    const labels = Array.from({ length: 12 }, (_, i) => `${i + 1}`);
+    const ctx = document.getElementById('events-chart').getContext('2d');
+
+    const barChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Incidents/Month',
+                data: data,
+                backgroundColor: 'rgba(255, 99, 132, 0.7)',
+            }],
+        },
+        options: {
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Month',
+                        font: {
+                            size: 16
+                        }
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Number of Incidents',
+                        font: {
+                            size: 16
+                        }
+
+                    },
+
+                    max :100,
+
+
+                }
+
+            }
+        }
+    });
+}
+
+
+countIncidentsForAllMonths(function (sums) {
+    createBarChart(sums);
+});
+
+
 
 
