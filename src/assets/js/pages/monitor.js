@@ -1,5 +1,5 @@
 "use strict";
-import { createMap, drawShuttle, fetchAndDrawStationsAndTracks } from "../components/map.js";
+import { createMap, drawShuttle, fetchAndDrawStationsAndTracks, getEntity, updateShuttle } from "../components/map.js";
 import { getEventsWith } from "../api.js";
 
 
@@ -28,18 +28,27 @@ function getUniqueIds(events) {
 function init() {
     const map = createMap("centra-map");
     fetchAndDrawStationsAndTracks(map);
+    displayWarnings();
+    displayShuttles();
+
+    fetchAndUpdateShuttles(map);
+    setInterval(() => fetchAndUpdateShuttles(map), 5000);
+}
+
+function fetchAndUpdateShuttles(map) {
     getEventsWith("?subject=MOVE", function(events) {
         const ids = getUniqueIds(events);
         for (const id of ids) {
             const move = getLastMoveForId(events, id);
-            drawShuttle(map, move.target.id, [move.latitude, move.longitude]);
+            const ent = getEntity(map, "shuttles", id);
+            if (ent === null) {
+                drawShuttle(map, move.target.id, [move.latitude, move.longitude]);
+            } else {
+                updateShuttle(ent, [move.latitude, move.longitude]);
+            }
         }
     });
-    displayWarnings();
-    displayShuttles();
 }
-
-
 
 
 
