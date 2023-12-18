@@ -34,6 +34,32 @@ function getReservationHours(reservation) {
     return Math.abs(stopTimestamp - startTimestamp) / MILISECONDS_IN_HOUR;
 }
 
+function getMonthlyReservationCoverage(successHandler) {
+
+}
+
+function createMonthlyReservationGraph(labels, dataValues) {
+    const ctx = document.getElementById('bar-chart').getContext('2d');
+    return new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Reservations/Month',
+                data: dataValues,
+                backgroundColor: 'rgba(54, 162, 235, 0.7)',
+            }],
+        },
+        options: {
+            labels: { font: { size: 20 } },
+            scales: {
+                x: { title: { display: true, font: { size: 20 } } },
+                y: { title: { display: true, text: "Reservations (%)", font: { size: 20 } }, max: 100 }
+            }
+        }
+    });
+}
+
 function fetchData() {
     getReservations(reservations => {
         const monthlyReservations = {};
@@ -64,46 +90,7 @@ function fetchData() {
 
         const labels = Object.keys(monthlyReservations);
         const dataValues = Object.values(monthlyReservations);
-
-        const ctx = document.getElementById('bar-chart').getContext('2d');
-        const barChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Reservations/Month',
-                    data: dataValues,
-                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
-                }],
-            },
-            options: {
-                labels: {
-                    font: {
-                        size: 20
-                    }
-                },
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            font: {
-                                size: 20
-                            }
-                        }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: "Reservations (%)",
-                            font: {
-                                size: 20
-                            }
-                        },
-                        max: 100
-                    }
-                }
-            }
-        });
+        createMonthlyReservationGraph(labels, dataValues);
     });
 }
 
