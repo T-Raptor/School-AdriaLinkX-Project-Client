@@ -9,13 +9,12 @@ document.addEventListener("DOMContentLoaded", init);
 function init() {
     const map = createMap("centra-map");
     fetchAndDrawStationsAndTracks(map);
-    //displayWarnings();
     renderShuttles(map);
+    renderNotices(map);
 
     getEvents((events) => {
         console.table(events);
     });
-
 }
 
 // Shuttles
@@ -84,24 +83,47 @@ function getLastMoveForId(events, id) {
 
 
 // Notices
-function renderWarnings() {
-    return;
+function renderNotices(map) {
+    fetchAndRenderNotices(map);
+    setInterval(() => fetchAndRenderNotices(), 5000);
 }
 
-function prepareWarningForList(warning) {
-    return;
+function fetchAndRenderNotices(map) {
+    getEvents((notices) => {
+        const filteredNotices = notices.filter((notice) => notice.subject === "BREAK" || notice.subject === "WARN");
+        const noticeList = prepareNoticeList(filteredNotices);
+        renderNoticeList(noticeList);
+        drawAndUpdateNotices(map, noticeList);
+    });
 }
 
-function renderWarningItem(warning) {
-    const warningList = document.querySelector("#notices");
+function prepareNoticeList(notices) {
+    return notices.map((notice) => ({
+        id: notice.id,
+        target: notice.target,
+        type: notice.subject,
+        reason: notice.reason,
+    }));
+}
 
-    for (let i = 0; i < 2; i++) {
-        const random = warnings[Math.floor(Math.random() * warnings.length)];
-        warningList.insertAdjacentHTML("beforeend", `<ul>
-    <li>${random}</li>
-    <li class="material-icons">warning</li>
-    </ul>`
-        );
-    }
+function renderNoticeList(noticeList) {
+    const noticeListElement = document.querySelector("#notices");
 
+    noticeListElement.innerHTML = noticeList.map((notice) => {
+        if (notice.type === "BREAK") {
+            return `<ul data-id="${notice.id}">
+                    <li>🛑<b>ALERT!</b>🛑</li>
+                    <li>${notice.reason}</li>
+                </ul>`;
+        } else {
+            return `<ul data-id="${notice.id}">
+                    <li>⚠️<b>WARNING</b>⚠️</li>
+                    <li>${notice.reason}</li>
+                </ul>`;
+        }
+        }).join("");
+}
+
+function drawAndUpdateNotices(map, events) {
+    return;
 }
