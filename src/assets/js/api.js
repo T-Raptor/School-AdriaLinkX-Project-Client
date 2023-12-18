@@ -120,4 +120,3 @@ function call(request, successHandler, errorHandler) {
 
 
 export { getStations, getTracks, getReservations, getEvents, placeReservation };
-export { getStations, getTracks, getReservations, getEventsWith, placeReservation };
