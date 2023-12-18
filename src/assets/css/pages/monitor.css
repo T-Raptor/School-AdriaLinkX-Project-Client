@@ -131,7 +131,7 @@ main {
 /* Sidebar class */
 .sidebar {
     padding: 1rem;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .sidebar > ul > ul {
