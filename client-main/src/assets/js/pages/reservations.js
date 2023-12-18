@@ -89,7 +89,7 @@ function tempGetLocalStorageReservation() {
 }
 
 function createRoutePicker(map) {
-    const routePicker = { map: map, selection: [] };
+    const routePicker = {map: map, selection: []};
 
     map.olMap.on("click", function (e) {
         map.olMap.forEachFeatureAtPixel(e.pixel, function (feat, layer) {
@@ -107,3 +107,4 @@ function createRoutePicker(map) {
     });
 
     return routePicker;
+}
