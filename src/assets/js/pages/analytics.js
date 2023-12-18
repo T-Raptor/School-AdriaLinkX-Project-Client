@@ -116,8 +116,25 @@ fetchData();
 
 
 
+async function fetchEventsData() {
+    try {
+        const response = await fetch("http://localhost:8080/api/events");
+        const data = await response.json();
 
+        console.log(data);
 
+        data.forEach(event => {
+            const incident = event.target;
+            console.log(incident);
+        });
+
+    }catch (error) {
+        console.error("Error fetching incidents data ",error);
+    }
+
+    }
+
+fetchEventsData();
 
 
 
