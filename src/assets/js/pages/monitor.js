@@ -11,20 +11,16 @@ function init() {
     renderWarnings();
     renderShuttles();
 
-    const queryParams = {
-        //subject: 'MOVE',
-    };
-
     getEvents((events) => {
         events.forEach((event) => {
             console.log(event);
         });
-    }, queryParams);
+    });
 }
 
 
 function renderShuttles() {
-    const shuttleMoving = {
+    const movingShuttle = {
         subject: 'MOVE',
     };
 
@@ -33,7 +29,7 @@ function renderShuttles() {
             const preparedShuttle = prepareShuttleForList(shuttle);
             renderShuttleItem(preparedShuttle);
         });
-    }, shuttleMoving);
+    }, movingShuttle);
 }
 
 function prepareShuttleForList(shuttle) {
