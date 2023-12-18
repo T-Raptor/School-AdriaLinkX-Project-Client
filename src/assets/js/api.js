@@ -16,7 +16,7 @@ function getReservations(successHandler) {
 }
 
 function getEventsWith(filters, successHandler) {
-    return get("events"+filters, rsp => rsp.json().then(successHandler));
+    return get("events" + filters, rsp => rsp.json().then(successHandler));
 }
 
 
