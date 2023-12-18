@@ -1,5 +1,6 @@
 "use strict";
-import { createMap, fetchAndDrawStationsAndTracks } from "../components/map.js";
+import { createMap, drawShuttle, fetchAndDrawStationsAndTracks } from "../components/map.js";
+import { getEventsWith } from "../api.js";
 
 
 document.addEventListener("DOMContentLoaded", init);
@@ -7,6 +8,11 @@ document.addEventListener("DOMContentLoaded", init);
 function init() {
     const map = createMap("centra-map");
     fetchAndDrawStationsAndTracks(map);
+    getEventsWith("?subject=MOVE", function(events) {
+        for (const event of events) {
+            drawShuttle(map, event.target.serial, [event.latitude, event.longitude]);
+        }
+    });
     displayWarnings();
     displayShuttles();
 }
