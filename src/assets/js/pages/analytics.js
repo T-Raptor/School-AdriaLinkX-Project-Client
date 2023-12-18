@@ -15,13 +15,13 @@ async function fetchData() {
         const monthlyReservations = {};
 
         data.forEach(entry => {
-            routes = entry.route || [];
+           const routes = entry.route || [];
 
 
             routes.forEach(route => {
 
                 const startDate = new Date(entry.periodStart);
-                const endDate = new Date(entry.periodStop)
+                const endDate = new Date(entry.periodStop);
 
 
                 const monthKey = `${startDate.getFullYear()}-${startDate.getMonth() + 1}`;
@@ -53,26 +53,15 @@ async function fetchData() {
 
 
                 const durationHours = durationMs / (1000 * 60 * 60);
-
-             
-
                 const reservedTime = distance * durationHours ;
                 const availableTime = hoursDay * daysMonth * distance;
-
-
-
-                const cal  = reservedTime /availableTime * 100 ;
-
-                console.log(cal)
-
-
+                const percentage  = reservedTime /availableTime * 100 ;
 
                 if (!monthlyReservations[monthKey]) {
                     monthlyReservations[monthKey] = 0;
                 }
 
-                monthlyReservations[monthKey] += (route.station1 ? 1 : 0) + (route.station2 ? 1 : 0);
-                console.log(monthlyReservations)
+                monthlyReservations[monthKey] += (percentage);
             });
         });
 
@@ -124,6 +113,8 @@ async function fetchData() {
 }
 
 fetchData();
+
+
 
 
 
