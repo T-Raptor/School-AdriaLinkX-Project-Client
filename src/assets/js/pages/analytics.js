@@ -82,7 +82,7 @@ function createMonthlyReservationGraph(labels, dataValues) {
     });
 }
 
-function fetchData() {
+function fetchAndDrawReservationCoverage() {
     getReservations((reservations) => {
         const coverage = getMonthlyReservationCoverage(reservations);
         const labels = Object.keys(coverage);
@@ -90,13 +90,6 @@ function fetchData() {
         createMonthlyReservationGraph(labels, dataValues);
     });
 }
-
-document.addEventListener("DOMContentLoaded", function () {
-    fetchData();
-    countIncidentsForAllMonths((sums) => console.log(sums));
-});
-
-
 
 
 
@@ -157,11 +150,14 @@ function createBarChart(data) {
     });
 }
 
+function fetchAndDrawMonthlyIncidents() {
+    countIncidentsForAllMonths(function (sums) {
+        createBarChart(sums);
+    });
+}
 
-countIncidentsForAllMonths(function (sums) {
-    createBarChart(sums);
+
+document.addEventListener("DOMContentLoaded", function () {
+    fetchAndDrawMonthlyIncidents();
+    fetchAndDrawReservationCoverage();
 });
-
-
-
-
