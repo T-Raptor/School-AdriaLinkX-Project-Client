@@ -20,6 +20,16 @@ function getEventsWith(filters, successHandler) {
 }
 
 
+function placeReservation(route, periodStart, periodStop, company, successHandler) {
+    return post("reservations", {
+        route,
+        periodStart,
+        periodStop,
+        company
+    }, successHandler);
+}
+
+
 function get(uri, successHandler = logJson, failureHandler = logError) {
     if (api === null) {
         loadConfig(a => {
@@ -105,4 +115,4 @@ function call(request, successHandler, errorHandler) {
 }
 
 
-export { getStations, getTracks, getReservations, getEventsWith };
+export { getStations, getTracks, getReservations, getEventsWith, placeReservation };
