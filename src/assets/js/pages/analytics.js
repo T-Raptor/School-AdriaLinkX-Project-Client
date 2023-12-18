@@ -7,6 +7,26 @@ function toRadians(degrees) {
 const hoursDay = 24;
 const daysMonth = 30;
 
+function getTrackLength(track) {
+    const radLat1 = toRadians(track.station1.latitude);
+    const radLon1 = toRadians(track.station1.longitude);
+
+    const radLat2 = toRadians(track.station2.latitude);
+    const radLon2 = toRadians(track.station2.longitude);
+
+    const deltaLat = Math.abs(radLat2 - radLat1);
+    const deltaLon = Math.abs(radLon2 - radLon1);
+
+    const a =
+        Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+        Math.cos(radLat1) * Math.cos(radLat2) * Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const earthRadius = 6371; // in kilometers
+
+    return earthRadius * c;
+}
+
 function fetchData() {
     getReservations(reservations => {
         const monthlyReservations = {};
@@ -21,25 +41,7 @@ function fetchData() {
 
 
                 const monthKey = `${startDate.getFullYear()}-${startDate.getMonth() + 1}`;
-
-                const radLat1 = toRadians(track.station1.latitude);
-                const radLon1 = toRadians(track.station1.longitude);
-
-                const radLat2 = toRadians(track.station2.latitude);
-                const radLon2 = toRadians(track.station2.longitude);
-
-                const deltaLat = radLat2 - radLat1;
-                const deltaLon = radLon2 - radLon1;
-
-                const a =
-                    Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
-                    Math.cos(radLat1) * Math.cos(radLat2) * Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
-
-                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-                const earthRadius = 6371; // Radius of the Earth in kilometers
-
-                const distance = earthRadius * c;
+                const distance = getTrackLength(track);
 
                 const startTimestamp = new Date(startDate).getTime();
                 const stopTimestamp = new Date(endDate).getTime();
