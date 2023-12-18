@@ -1,35 +1,68 @@
 "use strict";
-import { createMap, fetchAndDrawStationsAndTracks } from "../components/map.js";
 
+import { createMap, fetchAndDrawStationsAndTracks } from "../components/map.js";
+import { getEvents } from "../api.js";
 
 document.addEventListener("DOMContentLoaded", init);
 
 function init() {
     const map = createMap("centra-map");
     fetchAndDrawStationsAndTracks(map);
-    displayWarnings();
-    displayShuttles();
+    renderWarnings();
+    renderShuttles();
+
+    const queryParams = {
+        //subject: 'MOVE',
+    };
+
+    getEvents((events) => {
+        events.forEach((event) => {
+            console.log(event);
+        });
+    }, queryParams);
 }
 
 
+function renderShuttles() {
+    const shuttleMoving = {
+        subject: 'MOVE',
+    };
 
+    getEvents((shuttles) => {
+        shuttles.forEach((shuttle) => {
+            const preparedShuttle = prepareShuttleForList(shuttle);
+            renderShuttleItem(preparedShuttle);
+        });
+    }, shuttleMoving);
+}
 
+function prepareShuttleForList(shuttle) {
+    const preparedShuttle = {id: shuttle.id};
 
+    preparedShuttle.name = `Tempname #${Math.floor(Math.random() * 100)}`;
 
-const warnings = ["Track Blocked At: \n Adria &lt;-&gt; Badria",
-    "Track Blocked At: \n Adria &lt;-&gt; Cedria",
-    "Some heavy wind expect in Badria",
-    "Rain expected in Cedria",
-    "Storm expected in Dadria"];
+    return preparedShuttle;
+}
 
-const shuttles = [
-    "AE4-BSD-XES",
-    "AE5-DSD-XMD",
-    "AE6-DBD-XSM",
-    "AE8-DAB-FMX"
-];
+function renderShuttleItem(shuttleItem) {
+    const shuttleList = document.querySelector("#shuttles");
 
-function displayWarnings() {
+    shuttleList.insertAdjacentHTML("beforeend",
+        `<ul data-id="${shuttleItem.id}">
+            <li>${shuttleItem.name}</li>
+        </ul>`
+    );
+}
+
+function renderWarnings() {
+    return;
+}
+
+function prepareWarningForList(warning) {
+    return;
+}
+
+function renderWarningItem(warning) {
     const warningList = document.querySelector("#notices");
 
     for (let i = 0; i < 2; i++) {
@@ -41,17 +74,4 @@ function displayWarnings() {
         );
     }
 
-}
-
-function displayShuttles() {
-    const shuttlesList = document.querySelector("#shuttles");
-
-    for (let i = 0; i < 2; i++) {
-        const random = shuttles[Math.floor(Math.random() * shuttles.length)];
-        shuttlesList.insertAdjacentHTML("beforeend", `<ul>
-    <li>${random}</li>
-    <li class="material-icons">train</li>
-    </ul>`
-        );
-    }
 }
