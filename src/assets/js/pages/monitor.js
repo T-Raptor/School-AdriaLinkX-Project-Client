@@ -1,61 +1,56 @@
 "use strict";
 
-import { createMap, drawShuttle, fetchAndDrawStationsAndTracks, getEntity, updateShuttle } from "../components/map.js";
-import { getEvents } from "../api.js";
-
+import { createMap, drawShuttle, fetchAndDrawStationsAndTracks, getEntity, updateShuttle, drawBreak, drawWarning } from "../components/map.js";
+import { getEvents, getTracks } from "../api.js";
 
 document.addEventListener("DOMContentLoaded", init);
 
 function init() {
     const map = createMap("centra-map");
     fetchAndDrawStationsAndTracks(map);
-    renderShuttles(map);
-    renderNotices(map);
-
-    getEvents((events) => {
-        console.table(events);
-    });
+    renderEntities(map, "MOVE", drawAndUpdateShuttles, "shuttles");
+    renderEntities(map, "BREAK", drawAndUpdateNotices, "notices");
+    renderEntities(map, "WARN", drawAndUpdateNotices, "notices");
 }
 
 // Shuttles
-function renderShuttles(map) {
-    fetchAndRenderShuttles(map);
-    setInterval(() => fetchAndRenderShuttles(map), 5000);
+function renderEntities(map, eventType, drawAndUpdateFunction, elementId) {
+    fetchAndRenderEntities(map, eventType, drawAndUpdateFunction, elementId);
+    setInterval(() => fetchAndRenderEntities(map, eventType, drawAndUpdateFunction, elementId), 5000);
 }
 
-function fetchAndRenderShuttles(map) {
-    const movingShuttle = {
-        subject: 'MOVE',
+function fetchAndRenderEntities(map, eventType, drawAndUpdateFunction, elementId) {
+    const eventObject = {
+        subject: eventType,
     };
 
-    getEvents((shuttles) => {
-        const shuttleList = prepareShuttleList(shuttles);
-        renderShuttleList(shuttleList);
-        drawAndUpdateShuttles(map, shuttles);
-    }, movingShuttle);
+    getEvents((entities) => {
+        const entityList = prepareEntityList(entities);
+        renderEntityList(entityList, elementId);
+        drawAndUpdateFunction(map, entities, eventType);
+    }, eventObject);
 }
 
-function prepareShuttleList(shuttles) {
-    return shuttles.map((shuttle) => ({
-        id: shuttle.id,
+function prepareEntityList(entities) {
+    return entities.map((entity) => ({
+        id: entity.id,
         name: `Tempname #${Math.floor(Math.random() * 100)}`
     }));
 }
 
-function renderShuttleList(shuttleList) {
-    const shuttleListElement = document.querySelector("#shuttles");
-
-    shuttleListElement.innerHTML = shuttleList.map((shuttle) => `
-            <ul data-id="${shuttle.id}">
-                <li>${shuttle.name}</li>
-            </ul>`
+function renderEntityList(entityList, elementId) {
+    const entityListElement = document.querySelector(`#${elementId}`);
+    entityListElement.innerHTML = entityList.map((entity) => `
+        <ul data-id="${entity.id}">
+            <li>${entity.name}</li>
+        </ul>`
     ).join("");
 }
 
-function drawAndUpdateShuttles(map, events) {
-    const uniqueIds = getUniqueIds(events);
+function drawAndUpdateShuttles(map, entities) {
+    const uniqueIds = getUniqueIds(entities);
     uniqueIds.forEach((id) => {
-        const move = getLastMoveForId(events, id);
+        const move = getLastMoveForId(entities, id);
         const ent = getEntity(map, "shuttles", id);
 
         if (ent === null) {
@@ -66,64 +61,60 @@ function drawAndUpdateShuttles(map, events) {
     });
 }
 
-function getUniqueIds(events) {
+function getUniqueIds(entities) {
     return [...new Set(
-        events
-            .filter((event) => event.subject === "MOVE")
-            .map((event) => event.target.id)
+        entities
+            .filter((entity) => entity.subject === "MOVE")
+            .map((entity) => entity.target.id)
     )];
 }
 
-function getLastMoveForId(events, id) {
-    return events.find(
-        (event) => event.subject === "MOVE" && event.target.id === id
+function getLastMoveForId(entities, id) {
+    return entities.find(
+        (entity) => entity.subject === "MOVE" && entity.target.id === id
     ) || null;
 }
 
-
-
 // Notices
-function renderNotices(map) {
-    fetchAndRenderNotices(map);
-    setInterval(() => fetchAndRenderNotices(), 5000);
-}
+function drawAndUpdateNotices(map, entities, eventType) {
+    entities.forEach(async (notice) => {
+        try {
+            const entity = getEntity(map, eventType === "BREAK" ? "breaks" : "warnings", notice.id);
 
-function fetchAndRenderNotices(map) {
-    getEvents((notices) => {
-        const filteredNotices = notices.filter((notice) => notice.subject === "BREAK" || notice.subject === "WARN");
-        const noticeList = prepareNoticeList(filteredNotices);
-        renderNoticeList(noticeList);
-        drawAndUpdateNotices(map, noticeList);
+            if (entity === null) {
+                const trackLongLat = await getLonLatFromTrackId(notice.target.id);
+
+                if (eventType === "BREAK") {
+                    drawBreak(map, notice.id, [trackLongLat.long, trackLongLat.lat]);
+                } else if (eventType === "WARN") {
+                    drawWarning(map, notice.id, [trackLongLat.long, trackLongLat.lat]);
+                }
+            }
+        } catch (error) {
+            console.error(error.message);
+        }
     });
 }
 
-function prepareNoticeList(notices) {
-    return notices.map((notice) => ({
-        id: notice.id,
-        target: notice.target,
-        type: notice.subject,
-        reason: notice.reason,
-    }));
+function fetchAndRenderNotices(map) {
+    fetchAndRenderEntities(map, "BREAK", drawAndUpdateNotices, "notices");
+    fetchAndRenderEntities(map, "WARN", drawAndUpdateNotices, "notices");
 }
 
-function renderNoticeList(noticeList) {
-    const noticeListElement = document.querySelector("#notices");
+function getLonLatFromTrackId(trackId) {
+    return new Promise((resolve, reject) => {
+        getTracks((tracks) => {
+            const foundTrack = tracks.find((track) => track.id === trackId);
 
-    noticeListElement.innerHTML = noticeList.map((notice) => {
-        if (notice.type === "BREAK") {
-            return `<ul data-id="${notice.id}">
-                    <li>🛑<b>ALERT!</b>🛑</li>
-                    <li>${notice.reason}</li>
-                </ul>`;
-        } else {
-            return `<ul data-id="${notice.id}">
-                    <li>⚠️<b>WARNING</b>⚠️</li>
-                    <li>${notice.reason}</li>
-                </ul>`;
-        }
-        }).join("");
-}
-
-function drawAndUpdateNotices(map, events) {
-    return;
+            if (foundTrack) {
+                const longLat = {
+                    lat: foundTrack.station1.latitude,
+                    long: foundTrack.station1.longitude
+                };
+                resolve(longLat);
+            } else {
+                reject(new Error(`Track with ID ${trackId} not found`));
+            }
+        });
+    });
 }
