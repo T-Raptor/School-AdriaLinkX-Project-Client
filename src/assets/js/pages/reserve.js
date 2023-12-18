@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
             e.submitter.setAttribute("disabled", "");
             e.submitter.innerHTML = "...";
             placeReservation(route, start, stop, company, () => {
-                window.location.href = "/reservations.html";
+                window.location.replace("reservations.html");
             });
         }
     });
