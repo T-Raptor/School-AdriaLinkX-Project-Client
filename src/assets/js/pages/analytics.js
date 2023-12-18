@@ -34,8 +34,30 @@ function getReservationHours(reservation) {
     return Math.abs(stopTimestamp - startTimestamp) / MILISECONDS_IN_HOUR;
 }
 
-function getMonthlyReservationCoverage(successHandler) {
+function getMonthlyReservationCoverage(reservations) {
+    const monthlyReservations = {};
+    for (const reservation of reservations) {
+        const route = reservation.route || [];
 
+        for (const track of route) {
+            const startDate = new Date(reservation.periodStart);
+            const monthKey = `${startDate.getFullYear()}-${startDate.getMonth() + 1}`;
+
+            const distance = getTrackLength(track);
+            const durationHours = getReservationHours(reservation);
+
+            const reservedTime = distance * durationHours;
+            const availableTime = hoursDay * daysMonth * distance;
+            const percentage = reservedTime / availableTime * 100;
+
+            if (!monthlyReservations[monthKey]) {
+                monthlyReservations[monthKey] = 0;
+            }
+
+            monthlyReservations[monthKey] += (percentage);
+        }
+    }
+    return monthlyReservations;
 }
 
 function createMonthlyReservationGraph(labels, dataValues) {
@@ -61,40 +83,17 @@ function createMonthlyReservationGraph(labels, dataValues) {
 }
 
 function fetchData() {
-    getReservations(reservations => {
-        const monthlyReservations = {};
-        for (const reservation of reservations) {
-            const route = reservation.route || [];
-
-            for (const track of route) {
-
-
-
-                const startDate = new Date(reservation.periodStart);
-                const monthKey = `${startDate.getFullYear()}-${startDate.getMonth() + 1}`;
-
-                const distance = getTrackLength(track);
-                const durationHours = getReservationHours(reservation);
-
-                const reservedTime = distance * durationHours;
-                const availableTime = hoursDay * daysMonth * distance;
-                const percentage = reservedTime / availableTime * 100;
-
-                if (!monthlyReservations[monthKey]) {
-                    monthlyReservations[monthKey] = 0;
-                }
-
-                monthlyReservations[monthKey] += (percentage);
-            }
-        }
-
-        const labels = Object.keys(monthlyReservations);
-        const dataValues = Object.values(monthlyReservations);
+    getReservations((reservations) => {
+        const coverage = getMonthlyReservationCoverage(reservations);
+        const labels = Object.keys(coverage);
+        const dataValues = Object.values(coverage);
         createMonthlyReservationGraph(labels, dataValues);
     });
 }
 
-fetchData();
+document.addEventListener("DOMContentLoaded", function() {
+    fetchData();
+});
 
 
 
