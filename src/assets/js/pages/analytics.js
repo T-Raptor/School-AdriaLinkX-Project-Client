@@ -1,4 +1,4 @@
-import { getEventsWith, getReservations } from "../api.js";
+import { getEvents, getReservations } from "../api.js";
 
 function toRadians(degrees) {
     return degrees * (Math.PI / 180);
@@ -94,7 +94,7 @@ function fetchAndDrawReservationCoverage() {
 
 
 function getIncidents(successHandler) {
-    getEventsWith("", function(events) {
+    getEvents(function(events) {
         const filtered = events.filter(e => e.subject === "WARN" || e.subject === "BREAK");
         successHandler(filtered);
     });
