@@ -26,26 +26,57 @@ function fetchAndRenderEntities(map, eventType, drawAndUpdateFunction, elementId
 
     getEvents((entities) => {
         const entityList = prepareEntityList(entities);
-        renderEntityList(entityList, elementId);
+        renderEntityList(entityList, eventType, elementId);
         drawAndUpdateFunction(map, entities, eventType);
     }, eventObject);
 }
 
 function prepareEntityList(entities) {
-    return entities.map((entity) => ({
-        id: entity.id,
-        name: `Tempname #${Math.floor(Math.random() * 100)}`
-    }));
+    return entities.map((entity) => {
+        let params = {};
+
+        if (entity.subject === "MOVE") {
+            params = {
+                name: `Tempname #${Math.floor(Math.random() * 100)}`,
+            };
+        } else if (entity.subject === "BREAK" || entity.subject === "WARN") {
+            params = {
+                target: entity.target,
+                type: entity.subject,
+                reason: entity.reason,
+            };
+        }
+        return {
+            id: entity.id,
+            ...params,
+        };
+    });
 }
 
-function renderEntityList(entityList, elementId) {
+function renderEntityList(entityList, eventType, elementId) {
     const entityListElement = document.querySelector(`#${elementId}`);
-    entityListElement.innerHTML = entityList.map((entity) => `
-        <ul data-id="${entity.id}">
-            <li>${entity.name}</li>
-        </ul>`
-    ).join("");
+    entityListElement.innerHTML = entityList.map((entity) => {
+        switch (eventType) {
+            case "MOVE":
+                return `<ul data-id="${entity.id}">
+                    <li>${entity.name}</li>
+                </ul>`;
+            case "WARN":
+                return `<ul data-id="${entity.id}">
+                    <li>⚠️<b>WARNING!</b>⚠️</li>
+                    <li>${entity.reason}</li>
+                </ul>`;
+            case "BREAK":
+                return `<ul data-id="${entity.id}">
+                    <li>🛑<b>ALERT!</b>🛑</li>
+                    <li>${entity.reason}</li>
+                </ul>`;
+            default:
+                return "";
+        }
+    }).join("");
 }
+
 
 function drawAndUpdateShuttles(map, entities) {
     const uniqueIds = getUniqueIds(entities);
@@ -79,15 +110,17 @@ function getLastMoveForId(entities, id) {
 function drawAndUpdateNotices(map, entities, eventType) {
     entities.forEach(async (notice) => {
         try {
-            const entity = getEntity(map, eventType === "BREAK" ? "breaks" : "warnings", notice.id);
+            if (notice.subject === eventType) {
+                const entity = getEntity(map, eventType === "BREAK" ? "breaks" : "warnings", notice.id);
 
-            if (entity === null) {
-                const trackLongLat = await getLonLatFromTrackId(notice.target.id);
+                if (entity === null) {
+                    const trackLongLat = await getLonLatFromTrackId(notice.target.id);
 
-                if (eventType === "BREAK") {
-                    drawBreak(map, notice.id, [trackLongLat.long, trackLongLat.lat]);
-                } else if (eventType === "WARN") {
-                    drawWarning(map, notice.id, [trackLongLat.long, trackLongLat.lat]);
+                    if (eventType === "BREAK") {
+                        drawBreak(map, notice.id, [trackLongLat.long, trackLongLat.lat]);
+                    } else if (eventType === "WARN") {
+                        drawWarning(map, notice.id, [trackLongLat.long, trackLongLat.lat]);
+                    }
                 }
             }
         } catch (error) {
