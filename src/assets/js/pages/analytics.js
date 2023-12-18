@@ -1,4 +1,4 @@
-import { getReservations } from "../api.js";
+import { getEventsWith, getReservations } from "../api.js";
 
 function toRadians(degrees) {
     return degrees * (Math.PI / 180);
@@ -91,13 +91,21 @@ function fetchData() {
     });
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     fetchData();
+    fetchEventsData();
 });
 
 
 
-
+function fetchEventsData() {
+    getEventsWith("", events => {
+        events.forEach(event => {
+            const target = event.target;
+            console.log(target);
+        });
+    });
+}
 
 
 
