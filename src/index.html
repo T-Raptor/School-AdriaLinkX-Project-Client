@@ -67,15 +67,20 @@
             background-color: white;
             cursor: pointer;
         }
+
+        .active {
+            background-color: var(--button-color);
+            color: white;
+        }
     </style>
 </head>
 
 <body>
     <main>
         <h1>AdriaLinkX</h1>
-        <a href="#"><span>Log in</span></a>
+        <a href="#" id="log-in"><span>Log in</span></a>
         <br>
-        <ul>
+        <ul id="company-list">
             <li>Admin</li>
             <li>Hoogle</li>
             <li>Macrosoft</li>
@@ -83,6 +88,8 @@
             <li>AiBiEm</li>
         </ul>
     </main>
+
+    <script src="assets/js/pages/index.js"></script>
 </body>
 
 </html>
