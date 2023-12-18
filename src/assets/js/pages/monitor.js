@@ -55,28 +55,37 @@ function prepareEntityList(entities) {
 
 function renderEntityList(entityList, eventType, elementId) {
     const entityListElement = document.querySelector(`#${elementId}`);
-    entityListElement.innerHTML = entityList.map((entity) => {
-        switch (eventType) {
-            case "MOVE":
-                return `<ul data-id="${entity.id}">
-                    <li>${entity.name}</li>
-                </ul>`;
-            case "WARN":
-                return `<ul data-id="${entity.id}">
-                    <li>⚠️<b>WARNING!</b>⚠️</li>
-                    <li>${entity.reason}</li>
-                </ul>`;
-            case "BREAK":
-                return `<ul data-id="${entity.id}">
-                    <li>🛑<b>ALERT!</b>🛑</li>
-                    <li>${entity.reason}</li>
-                </ul>`;
-            default:
-                return "";
+
+    entityList.forEach((entity) => {
+        const existingElement = entityListElement.querySelector(`[data-id="${entity.id}"]`);
+
+        if (!existingElement) {
+            const html = generateHtml(entity, eventType);
+            entityListElement.insertAdjacentHTML('beforeend', html);
         }
-    }).join("");
+    });
 }
 
+function generateHtml(entity, eventType) {
+    switch (eventType) {
+        case "MOVE":
+            return `<ul data-id="${entity.id}">
+                        <li>${entity.name}</li>
+                    </ul>`;
+        case "WARN":
+            return `<ul data-id="${entity.id}">
+                        <li>⚠️<b>WARNING!</b>⚠️</li>
+                        <li>${entity.reason}</li>
+                    </ul>`;
+        case "BREAK":
+            return `<ul data-id="${entity.id}">
+                        <li>🛑<b>ALERT!</b>🛑</li>
+                        <li>${entity.reason}</li>
+                    </ul>`;
+        default:
+            return "";
+    }
+}
 
 function drawAndUpdateShuttles(map, entities) {
     const uniqueIds = getUniqueIds(entities);
@@ -140,18 +149,7 @@ function calculateMiddleTrack(trackId) {
             const foundTrack = tracks.find((track) => track.id === trackId);
 
             if (foundTrack) {
-                const longLat1 = {
-                    lat: foundTrack.station1.latitude,
-                    long: foundTrack.station1.longitude
-                };
-
-                const longLat2 = {
-                    lat: foundTrack.station2.latitude,
-                    long: foundTrack.station2.longitude
-                };
-
-                const midpoint = calculateMidpoint(longLat1.lat, longLat1.long, longLat2.lat, longLat2.long);
-
+                const midpoint = calculateMidpointBetweenStations(foundTrack.station1, foundTrack.station2);
                 resolve(midpoint);
             } else {
                 reject(new Error(`Track with ID ${trackId} not found`));
@@ -160,10 +158,9 @@ function calculateMiddleTrack(trackId) {
     });
 }
 
-// Calculate middle of track
-function calculateMidpoint(lat1, lon1, lat2, lon2) {
-    const resLat = (lat1 + lat2) / 2;
-    const resLong = (lon1 + lon2) / 2;
-
-    return { lat: resLat, long: resLong };
+function calculateMidpointBetweenStations(station1, station2) {
+    return {
+        lat: (station1.latitude + station2.latitude) / 2,
+        long: (station1.longitude + station2.longitude) / 2,
+    };
 }
