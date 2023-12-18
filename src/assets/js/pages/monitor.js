@@ -9,8 +9,8 @@ function init() {
     const map = createMap("centra-map");
     fetchAndDrawStationsAndTracks(map);
     renderEntities(map, "MOVE", drawAndUpdateShuttles, "shuttles");
-    renderEntities(map, "BREAK", drawAndUpdateNotices, "notices");
-    renderEntities(map, "WARN", drawAndUpdateNotices, "notices");
+    renderEntities(map, "BREAK", drawAndUpdateNotices, "break-notices");
+    renderEntities(map, "WARN", drawAndUpdateNotices, "warn-notices");
 }
 
 // Shuttles
@@ -55,37 +55,28 @@ function prepareEntityList(entities) {
 
 function renderEntityList(entityList, eventType, elementId) {
     const entityListElement = document.querySelector(`#${elementId}`);
-
-    entityList.forEach((entity) => {
-        const existingElement = entityListElement.querySelector(`[data-id="${entity.id}"]`);
-
-        if (!existingElement) {
-            const html = generateHtml(entity, eventType);
-            entityListElement.insertAdjacentHTML('beforeend', html);
+    entityListElement.innerHTML = entityList.map((entity) => {
+        switch (eventType) {
+            case "MOVE":
+                return `<ul data-id="${entity.id}">
+                    <li>${entity.name}</li>
+                </ul>`;
+            case "WARN":
+                return `<ul data-id="${entity.id}">
+                    <li>⚠️<b>WARNING!</b>⚠️</li>
+                    <li>${entity.reason}</li>
+                </ul>`;
+            case "BREAK":
+                return `<ul data-id="${entity.id}">
+                    <li>🛑<b>ALERT!</b>🛑</li>
+                    <li>${entity.reason}</li>
+                </ul>`;
+            default:
+                return "";
         }
-    });
+    }).join("");
 }
 
-function generateHtml(entity, eventType) {
-    switch (eventType) {
-        case "MOVE":
-            return `<ul data-id="${entity.id}">
-                        <li>${entity.name}</li>
-                    </ul>`;
-        case "WARN":
-            return `<ul data-id="${entity.id}">
-                        <li>⚠️<b>WARNING!</b>⚠️</li>
-                        <li>${entity.reason}</li>
-                    </ul>`;
-        case "BREAK":
-            return `<ul data-id="${entity.id}">
-                        <li>🛑<b>ALERT!</b>🛑</li>
-                        <li>${entity.reason}</li>
-                    </ul>`;
-        default:
-            return "";
-    }
-}
 
 function drawAndUpdateShuttles(map, entities) {
     const uniqueIds = getUniqueIds(entities);
