@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.1.0/ol.css">
   <link rel="stylesheet" href="assets/css/reset.css">
   <link rel="stylesheet" href="assets/css/components/date.css">
+  <link rel="stylesheet" href="assets/css/components/time.css">
   <link rel="stylesheet" href="assets/css/pages/reserve.css">
   <script src="assets/js/pages/reserve.js" type="module"></script>
 </head>
@@ -30,23 +31,11 @@
       </div>
 
       <div class="labels">
-        <label for="selectedDate">Select Date:</label>
-        <input type="text" id="selectedDate" readonly>
-
-        <label for="timeing">Select Time</label>
-        <input type="text" id="timeing" name="timeing">
-
-        <div id="additionalTimes"></div>
-
-        <button type="button" id="addTime">+</button>
-
-        <label for="routes"> Select Routes</label>
-        <select id="routes" name="routes">
-          <option value="route1">Adrial A</option>
-          <option value="route2">Adrial B</option>
-          <option value="route3">Adrial C</option>
-        </select>
-        <p id="routeDescription"></p>
+        <label>Select Time</label>
+        <div class="timepicker" id="reserve-time">
+          <ol class="content">
+          </ol>
+        </div>
       </div>
 
       <button type="button" id="submitForm">Checkout</button>
