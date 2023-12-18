@@ -93,21 +93,43 @@ function fetchData() {
 
 document.addEventListener("DOMContentLoaded", function () {
     fetchData();
-    fetchEventsData();
+    countIncidentsForAllMonths((sums) => console.log(sums));
 });
 
 
 
-function fetchEventsData() {
-    getEventsWith("", events => {
-        events.forEach(event => {
-            const target = event.target;
-            console.log(target);
-        });
+
+
+function getIncidents(successHandler) {
+    getEventsWith("", function(events) {
+        const filtered = events.filter(e => e.subject === "WARN" || e.subject === "BREAK");
+        successHandler(filtered);
     });
 }
 
+function countIncidentsForPeriod(incidents, periodStart, periodStop) {
+    let sumIncidents = 0;
+    for (const incident of incidents) {
+        const moment = incident.moment;
+        if(periodStart <= moment && periodStop >= moment) {
+            sumIncidents++;
+        }
+    }
+    return sumIncidents;
+}
 
+function countIncidentsForMonth(incidents, year, month) {
+    const periodStart = new Date(year, month, 1);
+    const periodStop = new Date(year, month+1, 0);
+    return countIncidentsForPeriod(incidents, periodStart, periodStop);
+}
 
-
-
+function countIncidentsForAllMonths(successHandler) {
+    getIncidents(function(incidents) {
+        const sums = [];
+        for (let i = 0; i < 12; i++) {
+            sums.push(countIncidentsForMonth(incidents, 2022, i));
+        }
+        successHandler(sums);
+    });
+}
