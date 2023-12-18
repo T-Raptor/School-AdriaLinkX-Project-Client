@@ -9,12 +9,7 @@ document.addEventListener("DOMContentLoaded", init);
 function init() {
     const map = createMap("centra-map");
     fetchAndDrawStationsAndTracks(map);
-    //displayWarnings();
     renderShuttles(map);
-
-    getEvents((events) => {
-        console.table(events);
-    });
 
 }
 
