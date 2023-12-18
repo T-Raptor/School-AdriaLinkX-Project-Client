@@ -14,8 +14,8 @@ function getTrackLength(track) {
     const radLat2 = toRadians(track.station2.latitude);
     const radLon2 = toRadians(track.station2.longitude);
 
-    const deltaLat = Math.abs(radLat2 - radLat1);
-    const deltaLon = Math.abs(radLon2 - radLon1);
+    const deltaLat = radLat2 - radLat1;
+    const deltaLon = radLon2 - radLon1;
 
     const a =
         Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
@@ -27,6 +27,13 @@ function getTrackLength(track) {
     return earthRadius * c;
 }
 
+const MILISECONDS_IN_HOUR = 1000 * 60 * 60;
+function getReservationHours(reservation) {
+    const startTimestamp = new Date(reservation.periodStart).getTime();
+    const stopTimestamp = new Date(reservation.periodStop).getTime();
+    return Math.abs(stopTimestamp - startTimestamp) / MILISECONDS_IN_HOUR;
+}
+
 function fetchData() {
     getReservations(reservations => {
         const monthlyReservations = {};
@@ -34,23 +41,15 @@ function fetchData() {
             const route = reservation.route || [];
 
             for (const track of route) {
+
+
+
                 const startDate = new Date(reservation.periodStart);
-                const endDate = new Date(reservation.periodStop);
-
-
-
-
                 const monthKey = `${startDate.getFullYear()}-${startDate.getMonth() + 1}`;
+
                 const distance = getTrackLength(track);
+                const durationHours = getReservationHours(reservation);
 
-                const startTimestamp = new Date(startDate).getTime();
-                const stopTimestamp = new Date(endDate).getTime();
-
-
-                const durationMs = stopTimestamp - startTimestamp;
-
-
-                const durationHours = durationMs / (1000 * 60 * 60);
                 const reservedTime = distance * durationHours;
                 const availableTime = hoursDay * daysMonth * distance;
                 const percentage = reservedTime / availableTime * 100;
