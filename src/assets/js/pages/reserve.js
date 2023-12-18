@@ -26,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const calendar = createCalendar(".calendar");
     const timepicker = createTimePicker(".timepicker", []);
 
-    console.log("aaa");
     document.querySelector("#reservationForm").addEventListener("submit", function(e) {
         e.preventDefault();
         if (mapHasValue(map) && calendarHasValue(calendar) && timepickerHasValue(timepicker)) {
@@ -39,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
             e.submitter.setAttribute("disabled", "");
             e.submitter.innerHTML = "...";
             placeReservation(route, start, stop, company, () => {
-                window.location.href = "/reservations.html";
+                window.location.replace("reservations.html");
             });
         }
     });

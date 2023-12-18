@@ -11,10 +11,6 @@ function init() {
     fetchAndDrawStationsAndTracks(map);
     renderShuttles(map);
     renderNotices(map);
-
-    getEvents((events) => {
-        console.table(events);
-    });
 }
 
 // Shuttles
