@@ -15,6 +15,14 @@ function getReservations(successHandler) {
     return get("reservations", rsp => rsp.json().then(successHandler));
 }
 
+function getEvents(successHandler, queryParams) {
+    // If parameters are given, build query string
+    const queryString = queryParams
+        ? '?' + new URLSearchParams(queryParams).toString()
+        : '';
+
+    return get(`events${queryString}`, rsp => rsp.json().then(successHandler));
+}
 
 function get(uri, successHandler = logJson, failureHandler = logError) {
     if (api === null) {
@@ -101,4 +109,4 @@ function call(request, successHandler, errorHandler) {
 }
 
 
-export { getStations, getTracks, getReservations };
+export { getStations, getTracks, getReservations, getEvents };
