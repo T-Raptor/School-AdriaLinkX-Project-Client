@@ -3,26 +3,85 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Adria 12: Concept Title goes here</title>
+    <title>AdriaLinkX</title>
     <style>
+        :root {
+            --background-color: #E4E4E4;
+            --text-color: #1F1F1F;
+            --button-color: #576CBC;
+            --button-border-color: #055C9D;
+        }
+
         body {
-            font-family: sans-serif;
+            background-color: var(--background-color);
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+
+        main {
+            display: grid;
+            place-items: center;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 6rem;
+            color: var(--text-color);
+            text-shadow: 0 0 3px white;
         }
 
         a {
+            font-size: 3rem;
             text-decoration: none;
             line-height: 2rem;
-            color: white;
-            padding: 0.2rem;
-            background-color: black;
+            color: var(--text-color);
+            height: 15rem;
+            width: 15rem;
+            text-align: center;
+            vertical-align: middle;
+            border: var(--button-border-color) 5px solid;
+            background-color: var(--button-color);
+            border-radius: 100%;
+            display: table;
+        }
+
+        span {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        ul {
+            padding: 0;
+            list-style: none;
+            display: flex;
+            width: 100%;
+            justify-content: space-around;
+        }
+
+        li {
+            padding: 0.5rem 0;
+            width: 15%;
+            text-align: center;
+            border: 1px solid grey;
+            border-radius: 5px;
+            background-color: white;
+            cursor: pointer;
         }
     </style>
 </head>
 
 <body>
-    <h1>Adria client side</h1>
-    <a href="monitor.html">Go to monitor</a>
-    <a href="reserve.html">Go to reserve</a>
+    <main>
+        <h1>AdriaLinkX</h1>
+        <a href="#"><span>Log in</span></a>
+        <br>
+        <ul>
+            <li>Admin</li>
+            <li>Hoogle</li>
+            <li>Macrosoft</li>
+            <li>Amazoodle</li>
+            <li>AiBiEm</li>
+        </ul>
+    </main>
 </body>
 
 </html>
