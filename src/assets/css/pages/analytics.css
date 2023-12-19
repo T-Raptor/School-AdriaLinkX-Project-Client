@@ -13,3 +13,10 @@ body{
     margin: auto;
     padding: 10px;
 }
+
+#density-map {
+    width: 600px;
+    height: 600px;
+    margin: auto;
+    padding: 10px;
+}
