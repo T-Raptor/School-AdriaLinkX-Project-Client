@@ -1,5 +1,4 @@
-import {getReservations} from "../api.js";
-import {getEventsWith} from "../api.js";
+import { getEvents, getReservations } from "../api.js";
 
 function toRadians(degrees) {
     return degrees * (Math.PI / 180);
@@ -84,7 +83,7 @@ function createMonthlyReservationGraph(labels, dataValues) {
     });
 }
 
-function fetchData() {
+function fetchAndDrawReservationCoverage() {
     getReservations((reservations) => {
         const coverage = getMonthlyReservationCoverage(reservations);
         const labels = Object.keys(coverage);
@@ -93,13 +92,10 @@ function fetchData() {
     });
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    fetchData();
-});
 
 
 function getIncidents(successHandler) {
-    getEventsWith("", function (events) {
+    getEvents(function(events) {
         const filtered = events.filter(e => e.subject === "WARN" || e.subject === "BREAK");
         successHandler(filtered);
     });
@@ -136,7 +132,7 @@ function createBarChart(data) {
     const labels = Array.from({length: 12}, (_, i) => `${i + 1}`);
     const ctx = document.getElementById('events-chart').getContext('2d');
 
-    const barChart = new Chart(ctx, {
+    return new Chart(ctx, {
         type: 'bar',
         data: {
             labels: labels,
@@ -148,49 +144,18 @@ function createBarChart(data) {
         },
         options: {
             scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Month',
-                        font: {
-                            size: 16
-                        }
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Number of Incidents',
-                        font: {
-                            size: 16
-                        }
-
-                    },
-
-                    max: 100,
-
-
-                }
-
+                x: { title: { display: true, text: 'Month', font: { size: 16 } } },
+                y: { title: { display: true, text: 'Number of Incidents', font: { size: 16 } }, max :100, }
             }
         }
     });
 }
 
-
-countIncidentsForAllMonths(function (sums) {
-    createBarChart(sums);
-});
-
-
-async function analytics() {
-    const response = await fetch("http://localhost:8080/api/reservations");
-    const data = await response.json();
-    console.log(data);
+function fetchAndDrawMonthlyIncidents() {
+    countIncidentsForAllMonths(function (sums) {
+        createBarChart(sums);
+    });
 }
-
-analytics();
-
 
 
 function calculateDensity(reservations, periodStart, periodStop) {
@@ -232,10 +197,18 @@ function countDensityForMonth(reservations, year, month) {
     return calculateDensity(reservations, periodStart, periodStop);
 }
 
+function fetchAndDrawRouteDensity() {
+    getReservations((reservations) => {
+        const year = 2022;
+        const month = 5;
+        const densityForMonth = countDensityForMonth(reservations, year, month);
+        console.log(`Density of Use for ${year}-${month}:`, densityForMonth);
+    });
+}
 
-getReservations((reservations) => {
-    const year = 2022;
-    const month = 5;
-    const densityForMonth = countDensityForMonth(reservations, year, month);
-    console.log(`Density of Use for ${year}-${month}:`, densityForMonth);
+
+document.addEventListener("DOMContentLoaded", function () {
+    fetchAndDrawMonthlyIncidents();
+    fetchAndDrawReservationCoverage();
+    fetchAndDrawRouteDensity();
 });

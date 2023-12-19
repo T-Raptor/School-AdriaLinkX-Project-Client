@@ -1,94 +1,157 @@
 "use strict";
-import { createMap, drawShuttle, fetchAndDrawStationsAndTracks, getEntity, updateShuttle } from "../components/map.js";
-import { getEventsWith } from "../api.js";
 
+import { createMap, drawShuttle, fetchAndDrawStationsAndTracks, getEntity, updateShuttle, drawBreak, drawWarning } from "../components/map.js";
+import { getEvents, getTracks } from "../api.js";
 
 document.addEventListener("DOMContentLoaded", init);
-
-function getLastMoveForId(events, id) {
-    let move = null;
-    for (const event of events) {
-        if (event.subject === "MOVE" && event.target.id === id) {
-            move = event;
-        }
-    }
-    return move;
-}
-
-function getUniqueIds(events) {
-    const ids = new Set();
-    for (const event of events) {
-        if (event.subject === "MOVE") {
-            ids.add(event.target.id);
-        }
-    }
-    return ids;
-}
 
 function init() {
     const map = createMap("centra-map");
     fetchAndDrawStationsAndTracks(map);
-    displayWarnings();
-    displayShuttles();
-
-    fetchAndUpdateShuttles(map);
-    setInterval(() => fetchAndUpdateShuttles(map), 5000);
+    renderEntities(map, "MOVE", drawAndUpdateShuttles, "shuttles");
+    renderEntities(map, "BREAK", drawAndUpdateNotices, "break-notices");
+    renderEntities(map, "WARN", drawAndUpdateNotices, "warn-notices");
 }
 
-function fetchAndUpdateShuttles(map) {
-    getEventsWith("?subject=MOVE", function(events) {
-        const ids = getUniqueIds(events);
-        for (const id of ids) {
-            const move = getLastMoveForId(events, id);
-            const ent = getEntity(map, "shuttles", id);
-            if (ent === null) {
-                drawShuttle(map, move.target.id, [move.latitude, move.longitude]);
-            } else {
-                updateShuttle(ent, [move.latitude, move.longitude]);
-            }
+// Shuttles
+function renderEntities(map, eventType, drawAndUpdateFunction, elementId) {
+    fetchAndRenderEntities(map, eventType, drawAndUpdateFunction, elementId);
+    setInterval(() => fetchAndRenderEntities(map, eventType, drawAndUpdateFunction, elementId), 5000);
+}
+
+function fetchAndRenderEntities(map, eventType, drawAndUpdateFunction, elementId) {
+    const eventObject = {
+        subject: eventType,
+    };
+
+    getEvents((entities) => {
+        const entityList = prepareEntityList(entities);
+        renderEntityList(entityList, eventType, elementId);
+        drawAndUpdateFunction(map, entities, eventType);
+    }, eventObject);
+}
+
+function prepareEntityList(entities) {
+    return entities.map((entity) => {
+        let params = {};
+
+        if (entity.subject === "MOVE") {
+            params = {
+                name: `Tempname #${Math.floor(Math.random() * 100)}`,
+            };
+        } else if (entity.subject === "BREAK" || entity.subject === "WARN") {
+            params = {
+                target: entity.target,
+                type: entity.subject,
+                reason: entity.reason,
+            };
+        }
+        return {
+            id: entity.id,
+            ...params,
+        };
+    });
+}
+
+function renderEntityList(entityList, eventType, elementId) {
+    const entityListElement = document.querySelector(`#${elementId}`);
+    entityListElement.innerHTML = entityList.map((entity) => {
+        switch (eventType) {
+            case "MOVE":
+                return `<ul data-id="${entity.id}">
+                    <li>${entity.name}</li>
+                </ul>`;
+            case "WARN":
+                return `<ul data-id="${entity.id}">
+                    <li>⚠️<b>WARNING!</b>⚠️</li>
+                    <li>${entity.reason}</li>
+                </ul>`;
+            case "BREAK":
+                return `<ul data-id="${entity.id}">
+                    <li>🛑<b>ALERT!</b>🛑</li>
+                    <li>${entity.reason}</li>
+                </ul>`;
+            default:
+                return "";
+        }
+    }).join("");
+}
+
+
+function drawAndUpdateShuttles(map, entities) {
+    const uniqueIds = getUniqueIds(entities);
+    uniqueIds.forEach((id) => {
+        const move = getLastMoveForId(entities, id);
+        const ent = getEntity(map, "shuttles", id);
+
+        if (ent === null) {
+            drawShuttle(map, move.target.id, [move.latitude, move.longitude]);
+        } else {
+            updateShuttle(ent, [move.latitude, move.longitude]);
         }
     });
 }
 
-
-
-
-const warnings = ["Track Blocked At: \n Adria &lt;-&gt; Badria",
-    "Track Blocked At: \n Adria &lt;-&gt; Cedria",
-    "Some heavy wind expect in Badria",
-    "Rain expected in Cedria",
-    "Storm expected in Dadria"];
-
-const shuttles = [
-    "AE4-BSD-XES",
-    "AE5-DSD-XMD",
-    "AE6-DBD-XSM",
-    "AE8-DAB-FMX"
-];
-
-function displayWarnings() {
-    const warningList = document.querySelector("#notices");
-
-    for (let i = 0; i < 2; i++) {
-        const random = warnings[Math.floor(Math.random() * warnings.length)];
-        warningList.insertAdjacentHTML("beforeend", `<ul>
-    <li>${random}</li>
-    <li class="material-icons">warning</li>
-    </ul>`
-        );
-    }
-
+function getUniqueIds(entities) {
+    return [...new Set(
+        entities
+            .filter((entity) => entity.subject === "MOVE")
+            .map((entity) => entity.target.id)
+    )];
 }
 
-function displayShuttles() {
-    const shuttlesList = document.querySelector("#shuttles");
+function getLastMoveForId(entities, id) {
+    return entities.find(
+        (entity) => entity.subject === "MOVE" && entity.target.id === id
+    ) || null;
+}
 
-    for (let i = 0; i < 2; i++) {
-        const random = shuttles[Math.floor(Math.random() * shuttles.length)];
-        shuttlesList.insertAdjacentHTML("beforeend", `<ul>
-    <li>${random}</li>
-    <li class="material-icons">train</li>
-    </ul>`
-        );
-    }
+// Notices
+function drawAndUpdateNotices(map, entities, eventType) {
+    entities.forEach(async (notice) => {
+        try {
+            if (notice.subject === eventType) {
+                const entity = getEntity(map, eventType === "BREAK" ? "breaks" : "warnings", notice.id);
+
+                if (entity === null) {
+                    const trackLongLat = await calculateMiddleTrack(notice.target.id);
+
+                    if (eventType === "BREAK") {
+                        drawBreak(map, notice.id, [trackLongLat.long, trackLongLat.lat]);
+                    } else if (eventType === "WARN") {
+                        drawWarning(map, notice.id, [trackLongLat.long, trackLongLat.lat]);
+                    }
+                }
+            }
+        } catch (error) {
+            console.error(error.message);
+        }
+    });
+}
+
+function fetchAndRenderNotices(map) {
+    fetchAndRenderEntities(map, "BREAK", drawAndUpdateNotices, "notices");
+    fetchAndRenderEntities(map, "WARN", drawAndUpdateNotices, "notices");
+}
+
+function calculateMiddleTrack(trackId) {
+    return new Promise((resolve, reject) => {
+        getTracks((tracks) => {
+            const foundTrack = tracks.find((track) => track.id === trackId);
+
+            if (foundTrack) {
+                const midpoint = calculateMidpointBetweenStations(foundTrack.station1, foundTrack.station2);
+                resolve(midpoint);
+            } else {
+                reject(new Error(`Track with ID ${trackId} not found`));
+            }
+        });
+    });
+}
+
+function calculateMidpointBetweenStations(station1, station2) {
+    return {
+        lat: (station1.latitude + station2.latitude) / 2,
+        long: (station1.longitude + station2.longitude) / 2,
+    };
 }
