@@ -1,5 +1,5 @@
-import { getReservations } from "../api.js";
-import { getEventsWith } from "../api.js";
+import {getReservations} from "../api.js";
+import {getEventsWith} from "../api.js";
 
 function toRadians(degrees) {
     return degrees * (Math.PI / 180);
@@ -29,6 +29,7 @@ function getTrackLength(track) {
 }
 
 const MILISECONDS_IN_HOUR = 1000 * 60 * 60;
+
 function getReservationHours(reservation) {
     const startTimestamp = new Date(reservation.periodStart).getTime();
     const stopTimestamp = new Date(reservation.periodStop).getTime();
@@ -74,10 +75,10 @@ function createMonthlyReservationGraph(labels, dataValues) {
             }],
         },
         options: {
-            labels: { font: { size: 20 } },
+            labels: {font: {size: 20}},
             scales: {
-                x: { title: { display: true, font: { size: 20 } } },
-                y: { title: { display: true, text: "Reservations (%)", font: { size: 20 } }, max: 100 }
+                x: {title: {display: true, font: {size: 20}}},
+                y: {title: {display: true, text: "Reservations (%)", font: {size: 20}}, max: 100}
             }
         }
     });
@@ -92,16 +93,13 @@ function fetchData() {
     });
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     fetchData();
 });
 
 
-
-
-
 function getIncidents(successHandler) {
-    getEventsWith("", function(events) {
+    getEventsWith("", function (events) {
         const filtered = events.filter(e => e.subject === "WARN" || e.subject === "BREAK");
         successHandler(filtered);
     });
@@ -111,7 +109,7 @@ function countIncidentsForPeriod(incidents, periodStart, periodStop) {
     let sumIncidents = 0;
     for (const incident of incidents) {
         const moment = incident.moment;
-        if(periodStart <= moment && periodStop >= moment) {
+        if (periodStart <= moment && periodStop >= moment) {
             sumIncidents++;
         }
     }
@@ -120,12 +118,12 @@ function countIncidentsForPeriod(incidents, periodStart, periodStop) {
 
 function countIncidentsForMonth(incidents, year, month) {
     const periodStart = new Date(year, month, 1);
-    const periodStop = new Date(year, month+1, 0);
+    const periodStop = new Date(year, month + 1, 0);
     return countIncidentsForPeriod(incidents, periodStart, periodStop);
 }
 
 function countIncidentsForAllMonths(successHandler) {
-    getIncidents(function(incidents) {
+    getIncidents(function (incidents) {
         const sums = [];
         for (let i = 0; i < 12; i++) {
             sums.push(countIncidentsForMonth(incidents, 2022, i));
@@ -135,7 +133,7 @@ function countIncidentsForAllMonths(successHandler) {
 }
 
 function createBarChart(data) {
-    const labels = Array.from({ length: 12 }, (_, i) => `${i + 1}`);
+    const labels = Array.from({length: 12}, (_, i) => `${i + 1}`);
     const ctx = document.getElementById('events-chart').getContext('2d');
 
     const barChart = new Chart(ctx, {
@@ -169,7 +167,7 @@ function createBarChart(data) {
 
                     },
 
-                    max :100,
+                    max: 100,
 
 
                 }
@@ -185,5 +183,59 @@ countIncidentsForAllMonths(function (sums) {
 });
 
 
+async function analytics() {
+    const response = await fetch("http://localhost:8080/api/reservations");
+    const data = await response.json();
+    console.log(data);
+}
+
+analytics();
 
 
+
+function calculateDensity(reservations, periodStart, periodStop) {
+    const routeDensity = {};
+
+    for (const reservation of reservations) {
+        const route = reservation.route || [];
+
+        for (const track of route) {
+            const routeId = track.id;
+
+            const distance = getTrackLength(track);
+            const durationHours = getReservationHours(reservation);
+            const reservationStart = new Date(reservation.periodStart);
+            const reservationStop = new Date(reservation.periodStop);
+
+            if (reservationStart >= periodStart && reservationStop <= periodStop) {
+                const reservedTime = distance * durationHours;
+
+                if (!routeDensity[routeId]) {
+                    routeDensity[routeId] = {
+                        totalReservedTime: 0,
+                        totalDistance: 0,
+                    };
+                }
+
+                routeDensity[routeId].totalReservedTime += reservedTime;
+                routeDensity[routeId].totalDistance += distance;
+            }
+        }
+    }
+
+    return routeDensity;
+}
+
+function countDensityForMonth(reservations, year, month) {
+    const periodStart = new Date(year, month - 1, 1);
+    const periodStop = new Date(year, month, 0);
+    return calculateDensity(reservations, periodStart, periodStop);
+}
+
+
+getReservations((reservations) => {
+    const year = 2022;
+    const month = 5;
+    const densityForMonth = countDensityForMonth(reservations, year, month);
+    console.log(`Density of Use for ${year}-${month}:`, densityForMonth);
+});
