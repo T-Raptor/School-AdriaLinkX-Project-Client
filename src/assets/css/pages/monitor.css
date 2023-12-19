@@ -124,13 +124,14 @@ main {
     grid-template-columns: 15% 69% 15%;
 }
 
-.warnings > div{
+.notices > div{
     display: flex; 
 }
 
 /* Sidebar class */
 .sidebar {
     padding: 1rem;
+    overflow-y: auto;
 }
 
 .sidebar > ul > ul {
