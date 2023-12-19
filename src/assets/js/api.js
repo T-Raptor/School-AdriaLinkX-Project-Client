@@ -7,6 +7,10 @@ function getStations(successHandler) {
     return get("stations", rsp => rsp.json().then(successHandler));
 }
 
+function getShuttles(successHandler) {
+    return get("shuttles", rsp => rsp.json().then(successHandler));
+}
+
 function getTracks(successHandler) {
     return get("tracks", rsp => rsp.json().then(successHandler));
 }
@@ -125,4 +129,4 @@ function call(request, successHandler, errorHandler) {
 }
 
 
-export { getStations, getTracks, getReservations, getEvents, placeReservation, popUnreadNotifications };
+export { getStations, getTracks, getReservations, getEvents, placeReservation, popUnreadNotifications, getShuttles };
