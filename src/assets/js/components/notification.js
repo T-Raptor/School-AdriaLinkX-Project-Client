@@ -26,7 +26,7 @@ function displayNotifications(notifications) {
 
                 // Add notifications to the array
                 notifications.forEach(function (notificationData) {
-                    const message = `Notification: ${notificationData.event.subject}`;
+                    const message = `Notification: ${notificationData.event.subject}`; //Please edit the event.subject to the correct value
                     const notification = createNotification(message);
                     notificationArray.push(notification);
                 });
