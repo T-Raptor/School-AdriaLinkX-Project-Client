@@ -28,6 +28,7 @@ function getTrackLength(track) {
 }
 
 const MILISECONDS_IN_HOUR = 1000 * 60 * 60;
+
 function getReservationHours(reservation) {
     const startTimestamp = new Date(reservation.periodStart).getTime();
     const stopTimestamp = new Date(reservation.periodStop).getTime();
@@ -73,10 +74,10 @@ function createMonthlyReservationGraph(labels, dataValues) {
             }],
         },
         options: {
-            labels: { font: { size: 20 } },
+            labels: {font: {size: 20}},
             scales: {
-                x: { title: { display: true, font: { size: 20 } } },
-                y: { title: { display: true, text: "Reservations (%)", font: { size: 20 } }, max: 100 }
+                x: {title: {display: true, font: {size: 20}}},
+                y: {title: {display: true, text: "Reservations (%)", font: {size: 20}}, max: 100}
             }
         }
     });
@@ -104,7 +105,7 @@ function countIncidentsForPeriod(incidents, periodStart, periodStop) {
     let sumIncidents = 0;
     for (const incident of incidents) {
         const moment = incident.moment;
-        if(periodStart <= moment && periodStop >= moment) {
+        if (periodStart <= moment && periodStop >= moment) {
             sumIncidents++;
         }
     }
@@ -113,12 +114,12 @@ function countIncidentsForPeriod(incidents, periodStart, periodStop) {
 
 function countIncidentsForMonth(incidents, year, month) {
     const periodStart = new Date(year, month, 1);
-    const periodStop = new Date(year, month+1, 0);
+    const periodStop = new Date(year, month + 1, 0);
     return countIncidentsForPeriod(incidents, periodStart, periodStop);
 }
 
 function countIncidentsForAllMonths(successHandler) {
-    getIncidents(function(incidents) {
+    getIncidents(function (incidents) {
         const sums = [];
         for (let i = 0; i < 12; i++) {
             sums.push(countIncidentsForMonth(incidents, 2022, i));
@@ -128,7 +129,7 @@ function countIncidentsForAllMonths(successHandler) {
 }
 
 function createBarChart(data) {
-    const labels = Array.from({ length: 12 }, (_, i) => `${i + 1}`);
+    const labels = Array.from({length: 12}, (_, i) => `${i + 1}`);
     const ctx = document.getElementById('events-chart').getContext('2d');
 
     return new Chart(ctx, {
@@ -157,7 +158,57 @@ function fetchAndDrawMonthlyIncidents() {
 }
 
 
+function calculateDensity(reservations, periodStart, periodStop) {
+    const routeDensity = {};
+
+    for (const reservation of reservations) {
+        const route = reservation.route || [];
+
+        for (const track of route) {
+            const routeId = track.id;
+
+            const distance = getTrackLength(track);
+            const durationHours = getReservationHours(reservation);
+            const reservationStart = new Date(reservation.periodStart);
+            const reservationStop = new Date(reservation.periodStop);
+
+            if (reservationStart >= periodStart && reservationStop <= periodStop) {
+                const reservedTime = distance * durationHours;
+
+                if (!routeDensity[routeId]) {
+                    routeDensity[routeId] = {
+                        totalReservedTime: 0,
+                        totalDistance: 0,
+                    };
+                }
+
+                routeDensity[routeId].totalReservedTime += reservedTime;
+                routeDensity[routeId].totalDistance += distance;
+            }
+        }
+    }
+
+    return routeDensity;
+}
+
+function countDensityForMonth(reservations, year, month) {
+    const periodStart = new Date(year, month - 1, 1);
+    const periodStop = new Date(year, month, 0);
+    return calculateDensity(reservations, periodStart, periodStop);
+}
+
+function fetchAndDrawRouteDensity() {
+    getReservations((reservations) => {
+        const year = 2022;
+        const month = 5;
+        const densityForMonth = countDensityForMonth(reservations, year, month);
+        console.log(`Density of Use for ${year}-${month}:`, densityForMonth);
+    });
+}
+
+
 document.addEventListener("DOMContentLoaded", function () {
     fetchAndDrawMonthlyIncidents();
     fetchAndDrawReservationCoverage();
+    fetchAndDrawRouteDensity();
 });
