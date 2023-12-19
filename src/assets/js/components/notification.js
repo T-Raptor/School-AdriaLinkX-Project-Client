@@ -1,34 +1,38 @@
 "use strict";
 
+import { popUnreadNotifications as fetchUnreadNotifications } from "../api.js";
+
 document.addEventListener("DOMContentLoaded", init);
 
 function init() {
-    createNotification();
-
+    // Fetch unread notifications and display them as notifications
+    fetchUnreadNotifications("Macrosoft", displayNotifications);
 }
 
-function createNotification() {
+function displayNotifications(notifications) {
     if ("Notification" in window) {
         // Request permission to show notifications
         Notification.requestPermission().then(function (permission) {
             if (permission === "granted") {
                 // Array to store notifications
-                let notifications = [];
+                let notificationArray = [];
 
                 // Function to create and display a notification
                 function createNotification(message) {
                     return new Notification(message, {
-                        icon: "path/to/icon.png" // Replace with your own icon path
+                        icon: "path/to/icon.png"
                     });
                 }
 
                 // Add notifications to the array
-                notifications.push(createNotification("Notification 1"));
-                notifications.push(createNotification("Notification 2"));
-                notifications.push(createNotification("Notification 3"));
+                notifications.forEach(function (notificationData) {
+                    const message = `Notification: ${notificationData.event.subject}`; //Please edit the event.subject to the correct value
+                    const notification = createNotification(message);
+                    notificationArray.push(notification);
+                });
 
                 // Close the notification when it's clicked
-                notifications.forEach(function (notification) {
+                notificationArray.forEach(function (notification) {
                     notification.onclick = function () {
                         notification.close();
                     };

@@ -33,6 +33,12 @@ function placeReservation(route, periodStart, periodStop, company, successHandle
     }, successHandler);
 }
 
+function popUnreadNotifications(company, successHandler) {
+    return post("notifications/unread", {
+        company
+    }, successHandler);
+}
+
 
 function get(uri, successHandler = logJson, failureHandler = logError) {
     if (api === null) {
@@ -119,4 +125,4 @@ function call(request, successHandler, errorHandler) {
 }
 
 
-export { getStations, getTracks, getReservations, getEvents, placeReservation };
+export { getStations, getTracks, getReservations, getEvents, placeReservation, popUnreadNotifications };
