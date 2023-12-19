@@ -1,4 +1,5 @@
 import { getEvents, getReservations } from "../api.js";
+import { createMap, setTrackStyle, fetchAndDrawStationsAndTracks } from "../components/map.js";
 
 function toRadians(degrees) {
     return degrees * (Math.PI / 180);
@@ -197,18 +198,52 @@ function countDensityForMonth(reservations, year, month) {
     return calculateDensity(reservations, periodStart, periodStop);
 }
 
-function fetchAndDrawRouteDensity() {
+const STYLE_TRACK_FULL = new ol.style.Style({
+    fill: new ol.style.Fill({ color: "#ff0000" }),
+    stroke: new ol.style.Stroke({ color: "#00ff00", width: 4 })
+});
+
+const STYLE_TRACK_BUSY = new ol.style.Style({
+    fill: new ol.style.Fill({ color: "#ffff66" }),
+    stroke: new ol.style.Stroke({ color: "#ffff66", width: 4 })
+});
+
+const STYLE_TRACK_CALM = new ol.style.Style({
+    fill: new ol.style.Fill({ color: "#0000ff" }),
+    stroke: new ol.style.Stroke({ color: "#00ff00", width: 4 })
+});
+
+async function wrapAsync(f) {
+    return new Promise(r => f(r));
+}
+
+const HOURS_IN_MONTH = 672;
+function fetchAndDrawRouteDensity(map) {
     getReservations((reservations) => {
         const year = 2022;
         const month = 5;
         const densityForMonth = countDensityForMonth(reservations, year, month);
         console.log(`Density of Use for ${year}-${month}:`, densityForMonth);
+        console.log(map.entities.tracks);
+        for (const track of Object.keys(densityForMonth)) {
+            const density = densityForMonth[track].totalReservedTime / densityForMonth[track].totalDistance / HOURS_IN_MONTH;
+            if (density > 0.8) {
+                setTrackStyle(map, +track, STYLE_TRACK_FULL);
+            } else if (density > 0.5) {
+                setTrackStyle(map, +track, STYLE_TRACK_BUSY);
+            } else {
+                setTrackStyle(map, +track, STYLE_TRACK_CALM);
+            }
+        }
     });
 }
 
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
     fetchAndDrawMonthlyIncidents();
     fetchAndDrawReservationCoverage();
-    fetchAndDrawRouteDensity();
+
+    const map = createMap("density-map");
+    await wrapAsync(successHandler => fetchAndDrawStationsAndTracks(map, successHandler));
+    fetchAndDrawRouteDensity(map);
 });

@@ -194,22 +194,24 @@ function fetchAndDrawStations(map, successHandler) {
         for (const station of stations) {
             entStations[station.name] = drawStation(map, station.name, [station.longitude, station.latitude]);
         }
-        successHandler(map, entStations);
+        successHandler(entStations);
     });
 }
 
-function fetchAndDrawTracks(map, entStations) {
+function fetchAndDrawTracks(map, entStations, successHandler) {
     getTracks((tracks) => {
+        const entTracks = {};
         for (const track of tracks) {
             const entStation1 = entStations[track.station1.name];
             const entStation2 = entStations[track.station2.name];
-            drawTrack(map, entStation1, entStation2, track.id);
+            entTracks[track.id] = drawTrack(map, entStation1, entStation2, track.id);
         }
+        successHandler(entTracks);
     });
 }
 
-function fetchAndDrawStationsAndTracks(map) {
-    fetchAndDrawStations(map, fetchAndDrawTracks);
+function fetchAndDrawStationsAndTracks(map, successHandler) {
+    fetchAndDrawStations(map, (entStations) => fetchAndDrawTracks(map, entStations, successHandler));
 }
 
 function getEntity(map, type, name) {
