@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", init);
 
 function init() {
     // Fetch unread notifications and display them as notifications
-    fetchUnreadNotifications(displayNotifications);
+    fetchUnreadNotifications("Macrosoft", displayNotifications);
 }
 
 function displayNotifications(notifications) {

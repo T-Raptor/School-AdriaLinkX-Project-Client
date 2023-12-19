@@ -30,7 +30,7 @@ function placeReservation(route, periodStart, periodStop, company, successHandle
 }
 
 function popUnreadNotifications(company, successHandler) {
-    return post("/api/notifications/unread", {
+    return post("notifications/unread", {
         company
     }, successHandler);
 }
