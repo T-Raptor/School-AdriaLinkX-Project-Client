@@ -1,16 +1,33 @@
 "use strict";
 
 import { createMap, drawShuttle, fetchAndDrawStationsAndTracks, getEntity, updateShuttle, drawBreak, drawWarning } from "../components/map.js";
-import { getEvents, getTracks } from "../api.js";
+import { getEvents, getShuttles, getTracks } from "../api.js";
 
 document.addEventListener("DOMContentLoaded", init);
 
 function init() {
     const map = createMap("centra-map");
-    fetchAndDrawStationsAndTracks(map);
-    renderEntities(map, "MOVE", drawAndUpdateShuttles, "shuttles");
+    fetchAndDrawStationsAndTracks(map, () => { });
+
+    fetchAndUpdateShuttlesMap(map);
+    fetchAndUpdateShuttlesList();
+
     renderEntities(map, "BREAK", drawAndUpdateNotices, "break-notices");
     renderEntities(map, "WARN", drawAndUpdateNotices, "warn-notices");
+}
+
+function fetchAndUpdateShuttlesMap(map) {
+    getEvents(moves => {
+        drawAndUpdateShuttles(map, moves);
+        setTimeout(() => fetchAndUpdateShuttlesMap(map), 1000);
+    }, {"subject": "MOVE"});
+}
+
+function fetchAndUpdateShuttlesList() {
+    getShuttles(shuttles => {
+        renderEntityList(shuttles, "MOVE", "shuttles");
+        setTimeout(fetchAndUpdateShuttlesList, 5000);
+    });
 }
 
 // Shuttles
@@ -59,7 +76,7 @@ function renderEntityList(entityList, eventType, elementId) {
         switch (eventType) {
             case "MOVE":
                 return `<ul data-id="${entity.id}">
-                    <li>${entity.name}</li>
+                    <li>${entity.serial}</li>
                 </ul>`;
             case "WARN":
                 return `<ul data-id="${entity.id}">
@@ -101,9 +118,10 @@ function getUniqueIds(entities) {
 }
 
 function getLastMoveForId(entities, id) {
-    return entities.find(
+    const moves = entities.filter(
         (entity) => entity.subject === "MOVE" && entity.target.id === id
-    ) || null;
+    );
+    return moves[moves.length - 1];
 }
 
 // Notices
