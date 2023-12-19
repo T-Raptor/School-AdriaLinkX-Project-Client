@@ -217,6 +217,7 @@ async function wrapAsync(f) {
     return new Promise(r => f(r));
 }
 
+const HOURS_IN_MONTH = 672;
 function fetchAndDrawRouteDensity(map) {
     getReservations((reservations) => {
         const year = 2022;
@@ -225,8 +226,14 @@ function fetchAndDrawRouteDensity(map) {
         console.log(`Density of Use for ${year}-${month}:`, densityForMonth);
         console.log(map.entities.tracks);
         for (const track of Object.keys(densityForMonth)) {
-            console.log(track);
-            setTrackStyle(map, +track, STYLE_TRACK_BUSY);
+            const density = densityForMonth[track].totalReservedTime / densityForMonth[track].totalDistance / HOURS_IN_MONTH;
+            if (density > 0.8) {
+                setTrackStyle(map, +track, STYLE_TRACK_FULL);
+            } else if (density > 0.5) {
+                setTrackStyle(map, +track, STYLE_TRACK_BUSY);
+            } else {
+                setTrackStyle(map, +track, STYLE_TRACK_CALM);
+            }
         }
     });
 }
