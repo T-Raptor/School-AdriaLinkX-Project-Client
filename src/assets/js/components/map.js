@@ -223,5 +223,11 @@ function getEntity(map, type, name) {
 }
 
 
+function setTrackStyle(map, trackId, style) {
+    const entity = getEntity(map, "tracks", trackId);
+    entity.feature.setStyle(style);
+}
 
-export {createMap, drawStation, drawShuttle, updateShuttle, drawTrack, fetchAndDrawStationsAndTracks, drawWarning, drawBreak, getEntity};
+
+
+export {createMap, drawStation, drawShuttle, updateShuttle, drawTrack, fetchAndDrawStationsAndTracks, drawWarning, drawBreak, getEntity, setTrackStyle};
