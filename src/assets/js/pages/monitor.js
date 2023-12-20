@@ -11,26 +11,22 @@ function init() {
     const map = createMap("centra-map");
     fetchAndDrawStationsAndTracks(map, () => { });
 
-    fetchAndUpdateShuttlesMap(map);
-    fetchAndUpdateShuttlesList();
+    fetchAndUpdateShuttles(map);
 
     renderEntities(map, "BREAK", drawAndUpdateNotices, "break-notices");
     renderEntities(map, "WARN", drawAndUpdateNotices, "warn-notices");
 }
 
-function fetchAndUpdateShuttlesMap(map) {
+function fetchAndUpdateShuttles(map) {
     getEvents(moves => {
-        drawAndUpdateShuttles(map, moves);
-        setTimeout(() => fetchAndUpdateShuttlesMap(map), 1000);
+        updateShuttlesMap(map, moves);
+        getShuttles(shuttles => {
+            updateShuttlesList(document.querySelector("#shuttles"), moves, shuttles);
+            setTimeout(() => fetchAndUpdateShuttles(map), 1000);
+        });
     }, {subject: "MOVE", earliest: new Date().getTime() - MEMORY_TIME});
 }
 
-function fetchAndUpdateShuttlesList() {
-    getShuttles(shuttles => {
-        renderEntityList(shuttles, "MOVE", "shuttles");
-        setTimeout(fetchAndUpdateShuttlesList, 5000);
-    }, {subject: "MOVE", earliest: new Date().getTime() - MEMORY_TIME});
-}
 
 // Shuttles
 function renderEntities(map, eventType, drawAndUpdateFunction, elementId) {
@@ -98,25 +94,6 @@ function renderEntityList(entityList, eventType, elementId) {
 }
 
 
-function drawAndUpdateShuttles(map, events) {
-    const uniqueIds = getUniqueIds(events);
-    uniqueIds.forEach((id) => {
-        const move = getLastMoveForId(events, id);
-        const ent = getEntity(map, "shuttles", id);
-
-        if (ent === null) {
-            drawShuttle(map, move.target.id, [move.latitude, move.longitude]);
-        } else {
-            updateShuttle(ent, [move.latitude, move.longitude]);
-        }
-    });
-    for (const entShuttle of map.entities.shuttles) {
-        if (!uniqueIds.includes(entShuttle.name)) {
-            deleteEntity(map, "shuttles", entShuttle);
-        }
-    }
-}
-
 function getUniqueIds(entities) {
     return [...new Set(
         entities
@@ -131,6 +108,40 @@ function getLastMoveForId(entities, id) {
     );
     return moves[moves.length - 1];
 }
+
+function updateShuttlesMap(map, moveEvents) {
+    const uniqueIds = getUniqueIds(moveEvents);
+    for (const id of uniqueIds) {
+        const move = getLastMoveForId(moveEvents, id);
+        const ent = getEntity(map, "shuttles", id);
+
+        if (ent === null) {
+            drawShuttle(map, move.target.id, [move.latitude, move.longitude]);
+        } else {
+            updateShuttle(ent, [move.latitude, move.longitude]);
+        }
+    }
+
+    for (const entShuttle of map.entities.shuttles) {
+        if (!uniqueIds.includes(entShuttle.name)) {
+            deleteEntity(map, "shuttles", entShuttle);
+        }
+    }
+}
+
+
+function updateShuttlesList($list, moveEvents, shuttles) {
+    $list.innerHTML = "";
+    const uniqueIds = getUniqueIds(moveEvents);
+    for (const id of uniqueIds) {
+        const shuttle = shuttles.find(s => s.id === id);
+        $list.innerHTML += `<ul data-id="${shuttle.id}"><li>${shuttle.serial}</li><ul>`;
+    }
+}
+
+
+
+
 
 // Notices
 function drawAndUpdateNotices(map, entities, eventType) {
@@ -155,10 +166,6 @@ function drawAndUpdateNotices(map, entities, eventType) {
     });
 }
 
-function fetchAndRenderNotices(map) {
-    fetchAndRenderEntities(map, "BREAK", drawAndUpdateNotices, "notices");
-    fetchAndRenderEntities(map, "WARN", drawAndUpdateNotices, "notices");
-}
 
 function calculateMiddleTrack(trackId) {
     return new Promise((resolve, reject) => {
