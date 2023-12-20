@@ -3,7 +3,7 @@
 import { createMap, drawShuttle, fetchAndDrawStationsAndTracks, getEntity, updateShuttle, drawBreak, drawWarning, deleteEntity } from "../components/map.js";
 import { getEvents, getShuttles, getTracks } from "../api.js";
 
-const MEMORY_TIME = 60 * 1000;
+const MEMORY_TIME = 10 * 1000;
 
 document.addEventListener("DOMContentLoaded", init);
 
@@ -12,10 +12,12 @@ function init() {
     fetchAndDrawStationsAndTracks(map, () => { });
 
     fetchAndUpdateShuttles(map);
+    fetchAndUpdateNotices(map);
 
-    renderEntities(map, "BREAK", drawAndUpdateNotices, "break-notices");
-    renderEntities(map, "WARN", drawAndUpdateNotices, "warn-notices");
+    renderEntities("BREAK", "break-notices");
+    renderEntities("WARN", "warn-notices");
 }
+
 
 function fetchAndUpdateShuttles(map) {
     getEvents(moves => {
@@ -27,6 +29,16 @@ function fetchAndUpdateShuttles(map) {
     }, {subject: "MOVE", earliest: new Date().getTime() - MEMORY_TIME});
 }
 
+function fetchAndUpdateNotices(map) {
+    getEvents(warnings => {
+        getEvents(async breaks => {
+            const notices = warnings.concat(breaks);
+            await updateNoticesMap(map, notices);
+            setTimeout(() => fetchAndUpdateNotices(map), 1000);
+        }, {subject: "BREAK", earliest: new Date().getTime() - MEMORY_TIME});
+    }, {subject: "WARN", earliest: new Date().getTime() - MEMORY_TIME});
+}
+
 
 // Shuttles
 function renderEntities(map, eventType, drawAndUpdateFunction, elementId) {
@@ -34,7 +46,7 @@ function renderEntities(map, eventType, drawAndUpdateFunction, elementId) {
     setInterval(() => fetchAndRenderEntities(map, eventType, drawAndUpdateFunction, elementId), 5000);
 }
 
-function fetchAndRenderEntities(map, eventType, drawAndUpdateFunction, elementId) {
+function fetchAndRenderEntities(eventType, elementId) {
     const eventObject = {
         subject: eventType,
         earliest: new Date().getTime() - MEMORY_TIME
@@ -43,7 +55,6 @@ function fetchAndRenderEntities(map, eventType, drawAndUpdateFunction, elementId
     getEvents((entities) => {
         const entityList = prepareEntityList(entities);
         renderEntityList(entityList, eventType, elementId);
-        drawAndUpdateFunction(map, entities, eventType);
     }, eventObject);
 }
 
@@ -94,25 +105,23 @@ function renderEntityList(entityList, eventType, elementId) {
 }
 
 
-function getUniqueIds(entities) {
+function getUniqueIds(events) {
     return [...new Set(
-        entities
-            .filter((entity) => entity.subject === "MOVE")
-            .map((entity) => entity.target.id)
+        events.map((entity) => entity.target.id)
     )];
 }
 
-function getLastMoveForId(entities, id) {
-    const moves = entities.filter(
-        (entity) => entity.subject === "MOVE" && entity.target.id === id
+function getLastEventForId(events, id) {
+    const eventsForTarget = events.filter(
+        (event) => event.target.id === id
     );
-    return moves[moves.length - 1];
+    return eventsForTarget[eventsForTarget.length - 1];
 }
 
 function updateShuttlesMap(map, moveEvents) {
     const uniqueIds = getUniqueIds(moveEvents);
     for (const id of uniqueIds) {
-        const move = getLastMoveForId(moveEvents, id);
+        const move = getLastEventForId(moveEvents, id);
         const ent = getEntity(map, "shuttles", id);
 
         if (ent === null) {
@@ -142,6 +151,39 @@ function updateShuttlesList($list, moveEvents, shuttles) {
 }
 
 
+async function updateNoticesMap(map, notices) {
+    const uniqueIds = getUniqueIds(notices);
+    for (const id of uniqueIds) {
+        const notice = getLastEventForId(notices, id);
+
+        if (notice.subject === "WARN") {
+            const ent = getEntity(map, "warnings", notice.id);
+            if (ent == null) {
+                const trackLongLat = await calculateMiddleTrack(notice.target.id);
+                drawWarning(map, notice.target.id, [trackLongLat.long, trackLongLat.lat]);
+            }
+        } else {
+            const ent = getEntity(map, "breaks", notice.id);
+            if (ent == null) {
+                const trackLongLat = await calculateMiddleTrack(notice.target.id);
+                drawBreak(map, notice.target.id, [trackLongLat.long, trackLongLat.lat]);
+            }
+        }
+    }
+
+    for (const entWarning of map.entities.warnings) {
+        console.log(uniqueIds)
+        if (!uniqueIds.includes(entWarning.name)) {
+            deleteEntity(map, "warnings", entWarning);
+        }
+    }
+
+    for (const entBreak of map.entities.breaks) {
+        if (!uniqueIds.includes(entBreak.name)) {
+            deleteEntity(map, "breaks", entBreak);
+        }
+    }
+}
 
 
 
