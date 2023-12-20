@@ -2,39 +2,16 @@
 
 import { createMap, fetchAndDrawStationsAndTracks } from "../components/map.js";
 import { getReservations } from "../api.js";
+import { requireIdentity } from "../storage.js";
 
 document.addEventListener("DOMContentLoaded", init);
 
 function init() {
     const map = createMap("centra-map");
     fetchAndDrawStationsAndTracks(map);
-    renderTemporaryCompanySelection();
     const currentCompany = checkAndRetrieveCompany();
     displayReservations(currentCompany);
 }
-
-function renderTemporaryCompanySelection() {
-    const topElement = document.querySelector("#top");
-    topElement.insertAdjacentHTML('beforeend', `
-        <ul>
-            Select company (Temp):
-            <li>
-                <button type="button" onclick='setAndReload("Admin")'>Admin</button>
-            </li>
-            <li>
-                <button type="button" onclick='setAndReload("Hoogle")'>Hoogle</button>
-            </li>
-            <li>
-                <button type="button" onclick='setAndReload("Macrosoft")'>Macrosoft</button>
-            </li>
-        </ul>
-    `);
-}
-
-window.setAndReload = function(company) {
-    localStorage.setItem("companyName", company);
-    window.location.reload();
-};
 
 function displayReservations(currentCompany) {
     getReservations((reservations) => {
@@ -48,17 +25,8 @@ function displayReservations(currentCompany) {
 }
 
 function checkAndRetrieveCompany() {
-    let companyName = localStorage.getItem("companyName");
-
-    // Temporary default setting
-    if (!companyName || companyName === null) {
-        localStorage.setItem("companyName", "Not a Client");
-    }
-
-    companyName = localStorage.getItem("companyName");
-
+    const companyName = requireIdentity();
     showCompanyName(companyName);
-
     return companyName;
 }
 

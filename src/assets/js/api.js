@@ -38,9 +38,7 @@ function placeReservation(route, periodStart, periodStop, company, successHandle
 }
 
 function popUnreadNotifications(company, successHandler) {
-    return post("notifications/unread", {
-        company
-    }, successHandler);
+    return post("notifications/unread", {company}, rsp => rsp.json().then(successHandler));
 }
 
 

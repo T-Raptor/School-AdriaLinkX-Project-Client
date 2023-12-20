@@ -213,7 +213,10 @@ function fetchAndDrawTracks(map, entStations, successHandler) {
             const entStation2 = entStations[track.station2.name];
             entTracks[track.id] = drawTrack(map, entStation1, entStation2, track.id);
         }
-        successHandler(entTracks);
+
+        if (successHandler != null) {
+            successHandler(entTracks);
+        }
     });
 }
 
