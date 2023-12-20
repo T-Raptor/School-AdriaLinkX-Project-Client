@@ -4,11 +4,10 @@ import { popUnreadNotifications as fetchUnreadNotifications } from "../api.js";
 import { getIdentity } from "../storage.js";
 
 document.addEventListener("DOMContentLoaded", function() {
-    fetchUnreadNotifications(getIdentity(), displayNotifications);
+    setInterval(() => fetchUnreadNotifications(getIdentity(), displayNotifications), 10000);
 });
 
 function displayNotifications(notifications) {
-    console.log(notifications);
     if ("Notification" in window) {
         // Request permission to show notifications
         Notification.requestPermission().then(function (permission) {
