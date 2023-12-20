@@ -33,8 +33,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const route = exportRouteSelection(map);
             const exportedDate = exportDateSelection(calendar);
             const exportedTime = exportTimeSelection(timepicker);
-            const start = new Date(exportedDate.year, exportedDate.month, exportedDate.day, exportedTime.start).getTime();
-            const stop = new Date(exportedDate.year, exportedDate.month, exportedDate.day, exportedTime.stop).getTime();
+            const start = new Date(exportedDate.year, exportedDate.month-1, exportedDate.day, exportedTime.start).getTime();
+            const stop = new Date(exportedDate.year, exportedDate.month-1, exportedDate.day, exportedTime.stop).getTime();
             const company = getIdentity();
             e.submitter.setAttribute("disabled", "");
             e.submitter.innerHTML = "...";
