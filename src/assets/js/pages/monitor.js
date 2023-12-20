@@ -1,7 +1,9 @@
 "use strict";
 
-import { createMap, drawShuttle, fetchAndDrawStationsAndTracks, getEntity, updateShuttle, drawBreak, drawWarning } from "../components/map.js";
+import { createMap, drawShuttle, fetchAndDrawStationsAndTracks, getEntity, updateShuttle, drawBreak, drawWarning, deleteEntity } from "../components/map.js";
 import { getEvents, getShuttles, getTracks } from "../api.js";
+
+const MEMORY_TIME = 60 * 1000;
 
 document.addEventListener("DOMContentLoaded", init);
 
@@ -20,14 +22,14 @@ function fetchAndUpdateShuttlesMap(map) {
     getEvents(moves => {
         drawAndUpdateShuttles(map, moves);
         setTimeout(() => fetchAndUpdateShuttlesMap(map), 1000);
-    }, {"subject": "MOVE"});
+    }, {subject: "MOVE", earliest: new Date().getTime() - MEMORY_TIME});
 }
 
 function fetchAndUpdateShuttlesList() {
     getShuttles(shuttles => {
         renderEntityList(shuttles, "MOVE", "shuttles");
         setTimeout(fetchAndUpdateShuttlesList, 5000);
-    });
+    }, {subject: "MOVE", earliest: new Date().getTime() - MEMORY_TIME});
 }
 
 // Shuttles
@@ -39,6 +41,7 @@ function renderEntities(map, eventType, drawAndUpdateFunction, elementId) {
 function fetchAndRenderEntities(map, eventType, drawAndUpdateFunction, elementId) {
     const eventObject = {
         subject: eventType,
+        earliest: new Date().getTime() - MEMORY_TIME
     };
 
     getEvents((entities) => {
@@ -95,10 +98,10 @@ function renderEntityList(entityList, eventType, elementId) {
 }
 
 
-function drawAndUpdateShuttles(map, entities) {
-    const uniqueIds = getUniqueIds(entities);
+function drawAndUpdateShuttles(map, events) {
+    const uniqueIds = getUniqueIds(events);
     uniqueIds.forEach((id) => {
-        const move = getLastMoveForId(entities, id);
+        const move = getLastMoveForId(events, id);
         const ent = getEntity(map, "shuttles", id);
 
         if (ent === null) {
@@ -107,6 +110,11 @@ function drawAndUpdateShuttles(map, entities) {
             updateShuttle(ent, [move.latitude, move.longitude]);
         }
     });
+    for (const entShuttle of map.entities.shuttles) {
+        if (!uniqueIds.includes(entShuttle.name)) {
+            deleteEntity(map, "shuttles", entShuttle);
+        }
+    }
 }
 
 function getUniqueIds(entities) {

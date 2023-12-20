@@ -79,6 +79,13 @@ function createMap(idTarget) {
             tracks: [],
             warnings: [],
             breaks: []
+        },
+        "layers": {
+            stations: lyrStations,
+            shuttles: lyrShuttles,
+            tracks: lyrTracks,
+            warnings: lyrWarnings,
+            breaks: lyrBreaks
         }
     };
 }
@@ -224,6 +231,11 @@ function getEntity(map, type, name) {
     return null;
 }
 
+function deleteEntity(map, type, ent_toremove) {
+    map.layers[type].getSource().removeFeature(ent_toremove.feature);
+    map.entities[type] = map.entities[type].filter(ent => ent.name !== ent_toremove.name);
+}
+
 
 function setTrackStyle(map, trackId, style) {
     const entity = getEntity(map, "tracks", trackId);
@@ -232,4 +244,4 @@ function setTrackStyle(map, trackId, style) {
 
 
 
-export {createMap, drawStation, drawShuttle, updateShuttle, drawTrack, fetchAndDrawStationsAndTracks, drawWarning, drawBreak, getEntity, setTrackStyle};
+export {createMap, drawStation, drawShuttle, updateShuttle, drawTrack, fetchAndDrawStationsAndTracks, drawWarning, drawBreak, getEntity, setTrackStyle, deleteEntity};
