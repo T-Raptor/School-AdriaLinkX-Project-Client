@@ -1,32 +1,31 @@
 "use strict";
 
 import { popUnreadNotifications as fetchUnreadNotifications } from "../api.js";
+import { getIdentity } from "../storage.js";
 
-document.addEventListener("DOMContentLoaded", init);
-
-function init() {
-    // Fetch unread notifications and display them as notifications
-    fetchUnreadNotifications("Macrosoft", displayNotifications);
-}
+document.addEventListener("DOMContentLoaded", function() {
+    fetchUnreadNotifications(getIdentity(), displayNotifications);
+});
 
 function displayNotifications(notifications) {
+    console.log(notifications);
     if ("Notification" in window) {
         // Request permission to show notifications
         Notification.requestPermission().then(function (permission) {
             if (permission === "granted") {
                 // Array to store notifications
-                let notificationArray = [];
+                const notificationArray = [];
 
                 // Function to create and display a notification
                 function createNotification(message) {
                     return new Notification(message, {
-                        icon: "path/to/icon.png"
+                        icon: "assets/images/logo.png"
                     });
                 }
 
                 // Add notifications to the array
                 notifications.forEach(function (notificationData) {
-                    const message = `Notification: ${notificationData.event.subject}`; //Please edit the event.subject to the correct value
+                    const message = `Notification: ${notificationData.event.reason}`;
                     const notification = createNotification(message);
                     notificationArray.push(notification);
                 });
