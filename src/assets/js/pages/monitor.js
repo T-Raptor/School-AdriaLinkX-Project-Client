@@ -133,8 +133,10 @@ function updateShuttlesMap(map, moveEvents) {
 function updateShuttlesList($list, moveEvents, shuttles) {
     $list.innerHTML = "";
     const uniqueIds = getUniqueIds(moveEvents);
-    for (const id of uniqueIds) {
-        const shuttle = shuttles.find(s => s.id === id);
+
+    const shuttles_active = uniqueIds.map(id => shuttles.find(s => s.id === id));
+    shuttles_active.sort((s1, s2) => s1.serial.localeCompare(s2.serial));
+    for (const shuttle of shuttles_active) {
         $list.innerHTML += `<ul data-id="${shuttle.id}"><li>${shuttle.serial}</li><ul>`;
     }
 }
