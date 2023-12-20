@@ -3,7 +3,7 @@ function setIdentity(company) {
 }
 
 function getIdentity() {
-    localStorage.getItem("companyName");
+    return localStorage.getItem("companyName");
 }
 
 export { setIdentity, getIdentity };
