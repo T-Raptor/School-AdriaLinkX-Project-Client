@@ -186,31 +186,6 @@ async function updateNoticesMap(map, notices) {
 }
 
 
-
-// Notices
-function drawAndUpdateNotices(map, entities, eventType) {
-    entities.forEach(async (notice) => {
-        try {
-            if (notice.subject === eventType) {
-                const entity = getEntity(map, eventType === "BREAK" ? "breaks" : "warnings", notice.id);
-
-                if (entity === null) {
-                    const trackLongLat = await calculateMiddleTrack(notice.target.id);
-
-                    if (eventType === "BREAK") {
-                        drawBreak(map, notice.id, [trackLongLat.long, trackLongLat.lat]);
-                    } else if (eventType === "WARN") {
-                        drawWarning(map, notice.id, [trackLongLat.long, trackLongLat.lat]);
-                    }
-                }
-            }
-        } catch (error) {
-            console.error(error.message);
-        }
-    });
-}
-
-
 function calculateMiddleTrack(trackId) {
     return new Promise((resolve, reject) => {
         getTracks((tracks) => {
