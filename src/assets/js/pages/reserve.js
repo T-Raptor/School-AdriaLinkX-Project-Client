@@ -4,6 +4,7 @@ import { createMap, fetchAndDrawStationsAndTracks } from "../components/map.js";
 import { createRoutePicker, exportRouteSelection } from "../components/routepicker.js";
 import { createTimePicker, exportTimeSelection } from "../components/time.js";
 import { placeReservation } from "../api.js";
+import { getIdentity } from "../storage.js";
 
 function mapHasValue(map) {
     return exportRouteSelection(map).length > 0;
@@ -34,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const exportedTime = exportTimeSelection(timepicker);
             const start = new Date(exportedDate.year, exportedDate.month, exportedDate.day, exportedTime.start).getTime();
             const stop = new Date(exportedDate.year, exportedDate.month, exportedDate.day, exportedTime.stop).getTime();
-            const company = "Hoogle";
+            const company = getIdentity();
             e.submitter.setAttribute("disabled", "");
             e.submitter.innerHTML = "...";
             placeReservation(route, start, stop, company, () => {
