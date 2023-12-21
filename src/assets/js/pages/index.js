@@ -1,6 +1,7 @@
 "use strict";
 
 import { getReservations } from "../api.js";
+import { setIdentity } from "../storage.js";
 
 document.addEventListener("DOMContentLoaded", init);
 
@@ -18,7 +19,7 @@ function login(e) {
     const company = getSelectedCompany();
     let foundReservation = false;
 
-    localStorage.setItem("companyName", company);
+    setIdentity(company);
 
     getReservations(reservations => {
         reservations.forEach(reservation => {
@@ -48,8 +49,7 @@ function getSelectedCompany() {
     const selectedCompany = Array.from(companies).find(li => li.classList.contains("selected"));
 
     if (selectedCompany) {
-        const companyName = selectedCompany.querySelector("button").innerText.trim();
-        return companyName;
+        return selectedCompany.querySelector("button").innerText.trim();
     } else {
         return null;
     }

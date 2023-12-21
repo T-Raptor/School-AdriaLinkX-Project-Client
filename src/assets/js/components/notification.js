@@ -1,10 +1,10 @@
 "use strict";
 
 import { popUnreadNotifications as fetchUnreadNotifications } from "../api.js";
-import { getIdentity } from "../storage.js";
+import { requireIdentity } from "../storage.js";
 
 document.addEventListener("DOMContentLoaded", function() {
-    setInterval(() => fetchUnreadNotifications(getIdentity(), displayNotifications), 10000);
+    setInterval(() => fetchUnreadNotifications(requireIdentity(), displayNotifications), 10000);
 });
 
 function displayNotifications(notifications) {
