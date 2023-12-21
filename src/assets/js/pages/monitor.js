@@ -16,6 +16,13 @@ function init() {
 
     renderEntities("BREAK", "break-notices");
     renderEntities("WARN", "warn-notices");
+
+    setInterval(updateTime, 1000);
+}
+
+function updateTime() {
+    const $time = document.querySelector("#timedate");
+    $time.innerHTML = (""+new Date()).split('(')[0].replace("GMT+0100", "");
 }
 
 
