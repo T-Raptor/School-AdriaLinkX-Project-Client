@@ -58,9 +58,9 @@ function fetchAndUpdateNotices(map) {
 
 
 // Shuttles
-function renderEntities(map, eventType, drawAndUpdateFunction, elementId) {
-    fetchAndRenderEntities(map, eventType, drawAndUpdateFunction, elementId);
-    setInterval(() => fetchAndRenderEntities(map, eventType, drawAndUpdateFunction, elementId), 5000);
+function renderEntities(eventType, elementId) {
+    fetchAndRenderEntities(eventType, elementId);
+    setInterval(() => fetchAndRenderEntities(eventType, elementId), 5000);
 }
 
 function fetchAndRenderEntities(eventType, elementId) {
