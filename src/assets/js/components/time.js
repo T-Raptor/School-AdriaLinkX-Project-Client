@@ -1,24 +1,26 @@
 function createTimePicker(selector, blockedSlots) {
     const target = document.querySelector(selector);
-    const timepicker = { target, selected: [] };
+    const timepicker = { target, selected: [], start: null, stop: null };
     renderTimeSlots(timepicker, blockedSlots);
 
     target.addEventListener("click", function (e) {
         const elm = e.target;
         if (elm.classList.contains("slot") && !elm.classList.contains("blocked")) {
             const hour = +elm.innerHTML;
-            if (timepicker.selected.includes(hour)
-                && (!timepicker.selected.includes(hour - 1)
-                    || !timepicker.selected.includes(hour + 1))
-            ) {
-                elm.classList.remove("selected");
-                timepicker.selected = timepicker.selected.filter(x => x !== hour);
-            } else if (timepicker.selected.length === 0
-                || timepicker.selected.includes(hour - 1)
-                || timepicker.selected.includes(hour + 1)
-            ) {
+            if (timepicker.start === null) {
                 elm.classList.add("selected");
-                timepicker.selected.push(hour);
+                timepicker.start = hour;
+            } else if (timepicker.stop === null) {
+                timepicker.stop = hour;
+                for (let i = timepicker.start; i <= timepicker.stop; i++) {
+                    timepicker.target.querySelector(`[data-id='${i}']`).classList.add("selected");
+                }
+            } else {
+                timepicker.start = null;
+                timepicker.stop = null;
+                for (let i = 0; i <= 23; i++) {
+                    timepicker.target.querySelector(`[data-id='${i}']`).classList.remove("selected");
+                }
             }
         }
     });
@@ -32,9 +34,9 @@ function renderTimeSlots(timepicker, blockedSlots) {
     for (let i = 0; i < 24; i++) {
         const strI = i < 10 ? "0" + i : "" + i;
         if (blockedSlots.includes(i)) {
-            $content.innerHTML += `<li class='slot blocked'>${strI}</li>`;
+            $content.innerHTML += `<li data-id='${i}' class='slot blocked'>${strI}</li>`;
         } else {
-            $content.innerHTML += `<li class='slot'>${strI}</li>`;
+            $content.innerHTML += `<li data-id='${i}' class='slot'>${strI}</li>`;
         }
     }
 }
@@ -42,8 +44,8 @@ function renderTimeSlots(timepicker, blockedSlots) {
 
 function exportTimeSelection(timepicker) {
     return {
-        start: Math.min(...timepicker.selected),
-        stop: Math.max(...timepicker.selected) + 1
+        start: timepicker.start,
+        stop: timepicker.stop + 1
     };
 }
 
