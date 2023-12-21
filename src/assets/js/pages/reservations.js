@@ -42,7 +42,7 @@ function renderReservationItems(reservation) {
             ${reservation.company ? `<li><b>${reservation.company}</b></li>` : ''}
             <li>#${reservation.id}</li>
             <li>${reservation.date}</li>
-            <li>${reservation.start_time} + ${reservation.timeframe}</li>
+            <li>${reservation.start_time} - ${reservation.stop_time}</li>
         </ul>`
     );
 }
@@ -54,6 +54,7 @@ function prepareDisplayedReservation(reservation) {
         id: reservation.id,
         date: formatDate(reservation.periodStart),
         start_time: formatTime(reservation.periodStart),
+        stop_time: formatTime(reservation.periodStop),
         timeframe: formatTime(reservation.periodStop - reservation.periodStart),
         ...(isAdmin ? { company: reservation.company } : {})
     };
