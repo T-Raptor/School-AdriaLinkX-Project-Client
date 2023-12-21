@@ -4,20 +4,21 @@ import { getStations, getTracks } from "../api.js";
 
 const MAP_TILES_URL = 'https://api.maptiler.com/maps/basic-v2/256/tiles.json?key=v7RhHG7ZxC29bKCh6207';
 const MAP_VIEW_CENTER = ol.proj.fromLonLat([4.34878, 50.85045]);
-const MAP_VIEW_ZOOM = 4;
+const MAP_VIEW_ZOOM = 6;
 
 
-const MARKER_STATION_SRC = 'assets/images/generic_marker.png';
+const MARKER_STATION_SRC = 'assets/images/marker_generic.png';
 const LAYER_STATIONS_STYLE =
 new ol.style.Style({
     image: new ol.style.Icon({
         src: MARKER_STATION_SRC,
         tileSize: 256,
-        scale: 0.008
+        scale: 0.008,
+        anchor: [0.5, 1]
     })
 });
 
-const MARKER_SHUTTLE_SRC = 'assets/images/green_marker.png';
+const MARKER_SHUTTLE_SRC = 'assets/images/marker_shuttle.png';
 const LAYER_SHUTTLES_STYLE =
 new ol.style.Style({
     image: new ol.style.Icon({
@@ -47,7 +48,7 @@ new ol.style.Style({
     })
 });
 
-const MARKER_TRACK_COLOR = '#FF0000';
+const MARKER_TRACK_COLOR = '#777777';
 const LAYER_TRACKS_STYLE =
 new ol.style.Style({
     stroke: new ol.style.Stroke({ color: MARKER_TRACK_COLOR, width: 4})
@@ -61,9 +62,9 @@ function createMap(idTarget) {
     const lyrTracks     = createVectorLayer(LAYER_TRACKS_STYLE);
     const lyrWarnings   = createVectorLayer(LAYER_WARNINGS_STYLE);
     const lyrBreaks     = createVectorLayer(LAYER_BREAKS_STYLE);
+    olMap.addLayer(lyrTracks);
     olMap.addLayer(lyrStations);
     olMap.addLayer(lyrShuttles);
-    olMap.addLayer(lyrTracks);
     olMap.addLayer(lyrWarnings);
     olMap.addLayer(lyrBreaks);
     return {

@@ -3,7 +3,7 @@
 import { createMap, drawShuttle, fetchAndDrawStationsAndTracks, getEntity, updateShuttle, drawBreak, drawWarning, deleteEntity } from "../components/map.js";
 import { getEvents, getShuttles, getTracks } from "../api.js";
 
-const MEMORY_TIME = 10 * 1000;
+const MEMORY_TIME = 30 * 1000;
 
 document.addEventListener("DOMContentLoaded", init);
 
@@ -16,6 +16,23 @@ function init() {
 
     renderEntities("BREAK", "break-notices");
     renderEntities("WARN", "warn-notices");
+
+    setInterval(updateTime, 1000);
+}
+
+const MILISECONDS_IN_HOUR = 60 * 60 * 1000;
+function getTimeOffset() {
+    const $offset = document.querySelector("#time-offset");
+    return (24 - $offset.value) * MILISECONDS_IN_HOUR;
+}
+
+function getTimeWithOffset() {
+    return (new Date()).getTime() - getTimeOffset();
+}
+
+function updateTime() {
+    const $time = document.querySelector("#timedate");
+    $time.innerHTML = (""+new Date(getTimeWithOffset())).split('(')[0].replace("GMT+0100", "");
 }
 
 
@@ -26,7 +43,7 @@ function fetchAndUpdateShuttles(map) {
             updateShuttlesList(document.querySelector("#shuttles"), moves, shuttles);
             setTimeout(() => fetchAndUpdateShuttles(map), 1000);
         });
-    }, {subject: "MOVE", earliest: new Date().getTime() - MEMORY_TIME});
+    }, {subject: "MOVE", earliest: getTimeWithOffset() - MEMORY_TIME, latest: getTimeWithOffset()});
 }
 
 function fetchAndUpdateNotices(map) {
@@ -35,8 +52,8 @@ function fetchAndUpdateNotices(map) {
             const notices = warnings.concat(breaks);
             await updateNoticesMap(map, notices);
             setTimeout(() => fetchAndUpdateNotices(map), 1000);
-        }, {subject: "BREAK", earliest: new Date().getTime() - MEMORY_TIME});
-    }, {subject: "WARN", earliest: new Date().getTime() - MEMORY_TIME});
+        }, {subject: "BREAK", earliest: getTimeWithOffset() - MEMORY_TIME, latest: getTimeWithOffset()});
+    }, {subject: "WARN", earliest: getTimeWithOffset() - MEMORY_TIME, latest: getTimeWithOffset()});
 }
 
 
@@ -49,7 +66,8 @@ function renderEntities(map, eventType, drawAndUpdateFunction, elementId) {
 function fetchAndRenderEntities(eventType, elementId) {
     const eventObject = {
         subject: eventType,
-        earliest: new Date().getTime() - MEMORY_TIME
+        earliest: getTimeWithOffset() - MEMORY_TIME,
+        latest: getTimeWithOffset()
     };
 
     getEvents((entities) => {
