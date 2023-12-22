@@ -6,9 +6,6 @@ import { setIdentity } from "../storage.js";
 document.addEventListener("DOMContentLoaded", init);
 
 function init() {
-    //const loginButton = document.querySelector("#log-in");
-    //loginButton.addEventListener("click", login);
-
     const companies = document.querySelectorAll("#company-list button");
     companies.forEach(button => button.addEventListener("click", addCompanySelector));
 
