@@ -3,6 +3,12 @@ function createTimePicker(selector, blockedSlots) {
     const timepicker = { target, selected: [], start: null, stop: null };
     renderTimeSlots(timepicker, blockedSlots);
 
+    registerTimePickerHandlers(timepicker, target);
+
+    return timepicker;
+}
+
+function registerTimePickerHandlers(timepicker, target) {
     target.addEventListener("click", function (e) {
         const elm = e.target;
         if (elm.classList.contains("slot") && !elm.classList.contains("blocked")) {
@@ -24,8 +30,6 @@ function createTimePicker(selector, blockedSlots) {
             }
         }
     });
-
-    return timepicker;
 }
 
 function renderTimeSlots(timepicker, blockedSlots) {
