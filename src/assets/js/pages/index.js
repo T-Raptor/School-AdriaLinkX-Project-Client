@@ -6,11 +6,15 @@ import { setIdentity } from "../storage.js";
 document.addEventListener("DOMContentLoaded", init);
 
 function init() {
-    const loginButton = document.querySelector("#log-in");
-    loginButton.addEventListener("click", login);
+    //const loginButton = document.querySelector("#log-in");
+    //loginButton.addEventListener("click", login);
 
     const companies = document.querySelectorAll("#company-list button");
     companies.forEach(button => button.addEventListener("click", addCompanySelector));
+
+    document.querySelector("#monitor").addEventListener("click", () => window.location.assign("monitor.html"));
+    document.querySelector("#analytics").addEventListener("click", () => window.location.assign("analytics.html"));
+    document.querySelector("#reservations").addEventListener("click", () => window.location.assign("reservations.html"));
 }
 
 function login(e) {
