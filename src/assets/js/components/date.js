@@ -8,6 +8,13 @@ function createCalendar(selector) {
     const year = currentDate.getFullYear();
     const calendar = { target, month, year };
 
+    registerMapHandlers(calendar, target);
+
+    renderCalendar(calendar);
+    return calendar;
+}
+
+function registerMapHandlers(calendar, target) {
     const btnPrevious = target.querySelector(".previous");
     btnPrevious.addEventListener("click", function(e) {
         e.preventDefault();
@@ -28,9 +35,6 @@ function createCalendar(selector) {
             setSelectedDay(calendar, e.target);
         }
     });
-
-    renderCalendar(calendar);
-    return calendar;
 }
 
 

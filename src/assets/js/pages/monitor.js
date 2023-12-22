@@ -171,6 +171,11 @@ function updateShuttlesList($list, moveEvents, shuttles) {
 
 async function updateNoticesMap(map, notices) {
     const uniqueIds = getUniqueIds(notices);
+    drawNewNoticesMap(map, uniqueIds);
+    clearOldNoticesMap(map, uniqueIds);
+}
+
+async function drawNewNoticesMap(map, uniqueIds) {
     for (const id of uniqueIds) {
         const notice = getLastEventForId(notices, id);
 
@@ -188,7 +193,9 @@ async function updateNoticesMap(map, notices) {
             }
         }
     }
+}
 
+function clearOldNoticesMap(map, uniqueIds) {
     for (const entWarning of map.entities.warnings) {
         if (!uniqueIds.includes(entWarning.name)) {
             deleteEntity(map, "warnings", entWarning);
