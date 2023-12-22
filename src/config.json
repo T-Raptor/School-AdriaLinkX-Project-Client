@@ -1,6 +1,6 @@
 {
-  "host": "https://project-2.ti.howest.be",
+  "host": "http://localhost:8080/",
   "folder": "",
-  "year": "2023-2024",
-  "group": "group-12"
+  "year": "",
+  "group": ""
 }
