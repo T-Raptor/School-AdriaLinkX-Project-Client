@@ -171,11 +171,11 @@ function updateShuttlesList($list, moveEvents, shuttles) {
 
 async function updateNoticesMap(map, notices) {
     const uniqueIds = getUniqueIds(notices);
-    drawNewNoticesMap(map, uniqueIds);
+    drawNewNoticesMap(map, uniqueIds, notices);
     clearOldNoticesMap(map, uniqueIds);
 }
 
-async function drawNewNoticesMap(map, uniqueIds) {
+async function drawNewNoticesMap(map, uniqueIds, notices) {
     for (const id of uniqueIds) {
         const notice = getLastEventForId(notices, id);
 
